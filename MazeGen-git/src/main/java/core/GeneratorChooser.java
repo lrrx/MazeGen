@@ -36,11 +36,12 @@ public class GeneratorChooser {
 	}
 	
 	public static ChunkGen getChunkGen(int chunkX, int chunkZ, boolean highwaysEnabled, int spawnSize, double chunkNoise, World world) {
-		ChunkGen cg = null;
-
+		ChunkGen cg = new EmptyChunkGen(world, chunkX, chunkZ);
 		//generate random integer for room generation choice
 		int n = Math.abs(((int) (chunkNoise * 2147483647D)) % 1300);
 
+		//System.out.println("___________________________n: " + n);
+		
 		//generate empty rooms for highways
 		if((chunkX % 256 == 0 || chunkZ % 256 == 0) && highwaysEnabled) {
 			cg = new EmptyChunkGen(world, chunkX, chunkZ);

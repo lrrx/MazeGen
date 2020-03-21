@@ -137,9 +137,9 @@ public class CustomChunkGenerator extends ChunkGenerator {
 		double chunkNoise = NoiseGen.noise(chunkX, chunkZ, world);
 
 		//generate higher walls in certain areas based on chunkNoise
-		if (((int) Math.abs(NoiseGen.largeNoise(chunkX, chunkZ, world) * 8D)) >= 7) {
+		/*if (((int) (chunkNoise * 4D)) >= 7) {
 			wallHeight =  16 + 16;
-		}
+		}*/
 		
 		//use chunkNoise as the seed for random generation in this chunk
 		random = new Random((long) (chunkNoise * 2147483647D));
