@@ -164,7 +164,7 @@ public class CustomChunkGenerator extends ChunkGenerator {
 		}
 
 		//generate walls, but not within forests or near spawn
-		if ((((int) (chunkNoise * 4D)) < 2) && !(Math.abs(chunkX) <= spawnSize && Math.abs(chunkZ) <= spawnSize)){
+		if (!(GeneratorChooser.isForest(chunkX, chunkZ, world)) && !(Math.abs(chunkX) <= spawnSize && Math.abs(chunkZ) <= spawnSize)){
 			chunkData = generateWalls(chunkX, chunkZ, random, world, chunkData);
 		}
 		

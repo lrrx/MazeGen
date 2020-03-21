@@ -83,7 +83,10 @@ public class LootChunkGen extends ChunkGen{
 			int randomIndex = random.nextInt(lootMaterials.length);
 			Material currentMaterial = (Material) lootMaterials[randomIndex];
 			if(lootChanceMap.get(currentMaterial) >= random.nextDouble() / 2) {
-				inventory.setItem(i, new ItemStack(currentMaterial, random.nextInt((int) (lootChanceMap.get(currentMaterial) * 16))));
+				int stackSize = Math.abs((int) (lootChanceMap.get(currentMaterial) * 16));
+				if(stackSize > 0) {
+					inventory.setItem(i, new ItemStack(currentMaterial, random.nextInt(stackSize)));
+				}
 			}
 		}
 	}

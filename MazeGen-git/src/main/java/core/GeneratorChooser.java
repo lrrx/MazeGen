@@ -2,29 +2,46 @@ package core;
 
 import org.bukkit.World;
 
-import generators.EmptyChunkGen;
-import generators.EnchantmentShrineChunkGen;
-import generators.ForestChunkGen;
-import generators.FountainChunkGen;
-import generators.LargeTowerChunkGen;
-import generators.LavaChunkGen;
-import generators.LavaHolesChunkGen;
-import generators.LavaParkourChunkGen;
-import generators.LootChunkGen;
-import generators.MazeChunkGen;
-import generators.PillarsChunkGen;
-import generators.SpawnerChunkGen;
-import generators.StoneMineChunkGen;
-import generators.WaterChunkGen;
-import generators.WaterHolesChunkGen;
+import generators.*;
 
 public class GeneratorChooser {
 	static boolean debugEnabled = false;
 
+	public static boolean isForest(int chunkX, int chunkZ, World world) {
+		
+		if(((int) (NoiseGen.noise(chunkX, chunkZ, world) * 8D)) > 6) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	public static boolean isInnerForest(int chunkX, int chunkZ, World world) {
+		
+		if(((int) (NoiseGen.noise(chunkX, chunkZ, world) * 8D)) > 7) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	public static boolean isMazeChunk(int chunkX, int chunkZ, World world) {
+		double chunkNoise = NoiseGen.noise(chunkX, chunkZ, world);
+		int chunkNoiseInt = (int) chunkNoise;
+		if ((5 <= chunkNoiseInt && chunkNoiseInt <= 6) || chunkNoiseInt == -2) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
 	public static boolean isForestNear(int chunkX, int chunkZ, World world) {
 		for(int x = -1; x <= 1; x++) {
 			for(int z = -1; z <= 1; z++) {
-				if (((int) (NoiseGen.noise(chunkX + x, chunkZ + z, world) * 4D)) == 2) {
+				if (isForest(chunkX, chunkZ, world) || isInnerForest(chunkX, chunkZ, world)) {
 					if (debugEnabled) {
 						System.out.println("Forest is Near! chunkX: " + chunkX + " chunkZ: " + chunkZ + " x: " + x + " z: " + z);
 					}
@@ -51,11 +68,14 @@ public class GeneratorChooser {
 			cg = new EmptyChunkGen(world, chunkX, chunkZ);
 		}
 		//use chunkNoise to decide what type of room (Maze/Forest) to generate
-		else if (((int) (chunkNoise * 4D)) == 1 || ((int) (chunkNoise * 4D)) == -1) {
+		else if(isMazeChunk(chunkX, chunkZ, world)) {
 			cg = new MazeChunkGen(world, chunkX, chunkZ);
 		}
-		else if (((int) (chunkNoise * 4D)) >= 2) {
+		else if (isForest(chunkX, chunkZ, world)) {
 			cg = new ForestChunkGen(world, chunkX, chunkZ);
+		}
+		else if (isInnerForest(chunkX, chunkZ, world)) {
+			cg = new InnerForestChunkGen(world, chunkX, chunkZ);
 		}
 		//only generate LavaChunk if there is no forest close to it
 		else if(1 <= n && n <= 30) {
