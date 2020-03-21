@@ -1,5 +1,0 @@
-name: MazeGen
-main: core.MazeGen
-version: 0.1
-api-version: 1.15
-load: startup
