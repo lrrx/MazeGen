@@ -82,6 +82,7 @@ public class ForestChunkGen extends ChunkGen{
 			int X = random.nextInt(15);
 			int Z = random.nextInt(15);
 			int Y;
+			
 			int noise = (int) (generator.noise(chunk.getX() * 16 + X, chunk.getZ() * 16 + Z, 0.2D, 0.4D) * 3);
 			Y = noise + baseHeight;
 
