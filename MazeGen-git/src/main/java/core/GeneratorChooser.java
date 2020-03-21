@@ -29,8 +29,8 @@ public class GeneratorChooser {
 	
 	public static boolean isMazeChunk(int chunkX, int chunkZ, World world) {
 		double chunkNoise = NoiseGen.noise(chunkX, chunkZ, world);
-		int chunkNoiseInt = (int) chunkNoise;
-		if ((5 <= chunkNoiseInt && chunkNoiseInt <= 6) || chunkNoiseInt == -2) {
+		int chunkNoiseInt = (int) (chunkNoise * 4D);
+		if ((chunkNoiseInt == 2) || chunkNoiseInt == -1) {
 			return true;
 		}
 		else {
