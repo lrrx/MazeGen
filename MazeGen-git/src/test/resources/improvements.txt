@@ -1,0 +1,25 @@
+geringere Stone Mine Tiefe (50% der Tiefe) sowie 75% der Erze +
+auf Bedrock Monster spawnen +
+nicht über Mauern bauen/laufen +
+
+LootRoom -> Brot, nicht anbaubares essen, Nuggets, Rails, mehr monsterloot
+
+-Waldbodengenerierung fixen
+
+
+-SpawnerStructureGen in ChunkGen fassen -> performance
+
+neue Räume:
+	-Zuckerrohr
+	-Schutthalde mit Kies und Sand + evtl wasser -> _Kies in Stone Mine
+	-Mesa-Biom
+	-Farm -> selten
+	-Verwucherte Trader-Hütte -> selten
+	-Weide in Wäldern(Zaun mit Tieren)
+	-Garten -> extrem selten
+	-_Wasser/Bad/Teich
+	-_Wasserlöcher
+	-_Lavalöcher
+	-_Riesensäulen-/
+	-Riesenstrukturen
+	-große freiflächen -> 3x3, 5x5, 9x9 -> Steinfeld
