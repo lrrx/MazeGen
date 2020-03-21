@@ -30,7 +30,7 @@ public class CustomChunkGenerator extends ChunkGenerator {
 	
 	//used to store chunk location based perlin noise
 	private double chunkNoise;
-	//1234
+	
 	//toggle highways
 	boolean highwaysEnabled = false;
 	
