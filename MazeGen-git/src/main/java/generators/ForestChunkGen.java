@@ -83,13 +83,15 @@ public class ForestChunkGen extends ChunkGen{
 			int Z = random.nextInt(15);
 			int Y;
 			int noise = (int) (generator.noise(chunk.getX() * 16 + X, chunk.getZ() * 16 + Z, 0.2D, 0.4D) * 3);
-			Y = noise + baseHeight;//for (Y = world.getMaxHeight()-1; chunk.getBlock(X, Y, Z).getType() == Material.AIR; Y--); // Find the highest block of the (X,Z) coordinate chosen.
-			int bonusHeight = random.nextInt(8) + 4;
+			Y = noise + baseHeight;
 
-			fillChunkRegionPopulate(X, Y, Z, X, Y + bonusHeight - 2, Z, Material.OAK_WOOD, chunk);
-			setChunkBlockPopulate(X, Y + bonusHeight - 1, Z, Material.GRASS_BLOCK, chunk);
-			world.generateTree(chunk.getBlock(X, Y + bonusHeight, Z).getLocation(), TreeType.BIG_TREE); // The tree type can be changed if you want.
-			setChunkBlockPopulate(X, Y + bonusHeight - 1, Z, Material.OAK_WOOD, chunk);
+			TreeType tt = TreeType.TREE;
+			
+			if(random.nextDouble() <= 0.3) {
+				tt = TreeType.BIG_TREE;
+			}
+			
+			world.generateTree(chunk.getBlock(X, Y, Z).getLocation(), tt);
 		}
 	}
 }
