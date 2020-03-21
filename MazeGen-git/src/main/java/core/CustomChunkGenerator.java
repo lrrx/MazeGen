@@ -31,10 +31,10 @@ public class CustomChunkGenerator extends ChunkGenerator {
 	//used to store chunk location based perlin noise
 	private double chunkNoise;
 	
-	//specifies wether highways are enabled
+	//toggle highways
 	boolean highwaysEnabled = false;
 	
-	//specifies the size of the empty spawn area
+	//size of the empty spawn area
 	private int spawnSize = 2;
 	
 	@Override
