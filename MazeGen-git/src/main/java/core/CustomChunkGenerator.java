@@ -28,9 +28,6 @@ public class CustomChunkGenerator extends ChunkGenerator {
 	//main maze material
 	private Material baseMaterial = Material.BEDROCK;
 	
-	//used to store chunk location based perlin noise
-	private double chunkNoise;
-	
 	//toggle highways
 	boolean highwaysEnabled = false;
 	
@@ -41,87 +38,6 @@ public class CustomChunkGenerator extends ChunkGenerator {
 	public List<BlockPopulator> getDefaultPopulators(World world) {
 		//maze populator hook
 		return Arrays.asList((BlockPopulator)new MazePopulator(this.baseHeight, this.wallHeight, this.baseMaterial, world));
-	}
-
-	//normal-scale chunk location based perlin noise
-	public double noise(int chunkX, int chunkZ, World world) {
-		SimplexOctaveGenerator generator = new SimplexOctaveGenerator(new Random(world.getSeed()), 4);
-		generator.setScale(0.005D);
-		return generator.noise(chunkX * 16 , chunkZ * 16 , 0.2D, 0.4D);
-	}
-
-	//large-scale chunk location based perlin noise
-	public double largeNoise(int chunkX, int chunkZ, World world) {
-		SimplexOctaveGenerator generator = new SimplexOctaveGenerator(new Random(world.getSeed()), 4);
-		generator.setScale(0.001D);
-		return generator.noise(chunkX * 16 , chunkZ * 16 , 0.2D, 0.4D);
-	}
-
-	public ChunkGen getRandomChunkGenerator(int chunkX, int chunkZ, double chunkNoise2, World world, BiomeGrid biomeGrid) {
-		
-		ChunkGen cg = null;
-		
-		//generate random integer for room generation choice
-		int n = Math.abs(((int) (chunkNoise2 * 2147483647D)) % 1300);
-		
-		//generate empty rooms for highways
-		if((chunkX % 256 == 0 || chunkZ % 256 == 0) && highwaysEnabled) {
-			cg = new EmptyChunkGen(world, chunkX, chunkZ, biomeGrid);
-		}
-		//generate empty rooms near spawn
-		else if(Math.abs(chunkX) <= spawnSize && Math.abs(chunkZ) <= spawnSize) {
-			 cg = new EmptyChunkGen(world, chunkX, chunkZ, biomeGrid);
-		}
-		//use chunkNoise to decide what type of room (Maze/Forest) to generate
-		else if (((int) (chunkNoise2 * 4D)) == 1 || ((int) (chunkNoise2 * 4D)) == -1) {
-			cg = new MazeChunkGen(world, chunkX, chunkZ, biomeGrid);
-		}
-		else if (((int) (chunkNoise2 * 4D)) >= 2) {
-			cg = new ForestChunkGen(world, chunkX, chunkZ, biomeGrid);
-		}
-		//only generate LavaChunk if there is no forest close to it
-		else if(1 <= n && n <= 30) {
-			if (!forestIsNear(chunkX, chunkZ, world)){
-				cg = new LavaChunkGen(world, chunkX, chunkZ, biomeGrid);
-			}
-		}
-		//only generate LavaParkourChunk if there is no forest close to it
-		else if (101 <= n && n <= 130) {
-			if (!forestIsNear(chunkX, chunkZ, world)){
-				cg = new LavaParkourChunkGen(world, chunkX, chunkZ, biomeGrid);
-			}
-		}
-		else if (201 <= n && n <= 220) {
-			cg = new StoneMineChunkGen(world, chunkX, chunkZ, biomeGrid);
-		}
-		else if (301 <= n && n <= 350) {
-			cg = new PillarsChunkGen(world, chunkX, chunkZ, biomeGrid);
-		}
-		else if (401 <= n && n <= 410) {
-			cg = new EnchantmentShrineChunkGen(world, chunkX, chunkZ, biomeGrid);
-		}
-		else if (501 <= n && n <= 530) {
-			cg = new FountainChunkGen(world, chunkX, chunkZ, biomeGrid);
-		}
-		else if(601 <= n && n <= 630) {
-			cg = new SpawnerChunkGen(world, chunkX, chunkZ, biomeGrid);
-		}
-		else if (701 <= n && n <= 730) {
-			cg = new LootChunkGen(world, chunkX, chunkZ, biomeGrid);
-		}
-		else if (801 <= n && n <= 815) {
-			cg = new LargeTowerChunkGen(world, chunkX, chunkZ, biomeGrid);
-		}
-		else if (901 <= n && n <= 930) {
-			cg = new WaterChunkGen(world, chunkX, chunkZ, biomeGrid);
-		}
-		else if (1001 <= n && n <= 1010) {
-			cg = new WaterHolesChunkGen(world, chunkX, chunkZ, biomeGrid);
-		}
-		else if (1101 <= n && n <= 1130) {
-			cg = new LavaHolesChunkGen(world, chunkX, chunkZ, biomeGrid);
-		}
-		return cg;
 	}
 
 	public ChunkData generateXWall(ChunkData chunkData) {
@@ -211,20 +127,6 @@ public class CustomChunkGenerator extends ChunkGenerator {
 		return chunkData;
 	}
 
-	public boolean forestIsNear(int chunkX, int chunkZ, World world) {
-		for(int x = -1; x <= 1; x++) {
-			for(int z = -1; z <= 1; z++) {
-				if (((int) (noise(chunkX + x, chunkZ + z, world) * 4D)) == 2) {
-					if (debugEnabled) {
-						System.out.println("Forest is Near! chunkX: " + chunkX + " chunkZ: " + chunkZ + " x: " + x + " z: " + z);
-					}
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
 	@Override
 	public ChunkData generateChunkData(World world, Random random, int chunkX, int chunkZ, BiomeGrid biomeGrid) {
 
@@ -232,10 +134,10 @@ public class CustomChunkGenerator extends ChunkGenerator {
 		ChunkData chunkData = createChunkData(world);
 
 		//prepare chunkNoise for use in this chunk -> store it in variable to only have one call to SimplexOctaveGenerator to save performance
-		chunkNoise = noise(chunkX, chunkZ, world);
+		double chunkNoise = NoiseGen.noise(chunkX, chunkZ, world);
 
 		//generate higher walls in certain areas based on chunkNoise
-		if (((int) Math.abs(largeNoise(chunkX, chunkZ, world) * 8D)) >= 7) {
+		if (((int) Math.abs(NoiseGen.largeNoise(chunkX, chunkZ, world) * 8D)) >= 7) {
 			wallHeight =  16 + 16;
 		}
 		
@@ -252,7 +154,7 @@ public class CustomChunkGenerator extends ChunkGenerator {
 		}
 
 		//choose a chunk generator
-		ChunkGen cg = getRandomChunkGenerator(chunkX, chunkZ, chunkNoise, world, biomeGrid);
+		ChunkGen cg = GeneratorChooser.getChunkGen(chunkX, chunkZ, highwaysEnabled, spawnSize, chunkNoise, world);
 		
 		//let cg generate into chunkData
 		chunkData = cg.generate(chunkData);

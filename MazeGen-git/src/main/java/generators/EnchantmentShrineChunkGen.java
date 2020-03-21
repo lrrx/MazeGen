@@ -4,20 +4,19 @@ import java.util.Random;
 
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.generator.ChunkGenerator.BiomeGrid;
 import org.bukkit.generator.ChunkGenerator.ChunkData;
 
 import core.ChunkGen;
 import core.ChunkType;
 
 public class EnchantmentShrineChunkGen extends ChunkGen{
-	public EnchantmentShrineChunkGen(World world, int chunkX, int chunkZ, BiomeGrid biomeGrid) {
-		super("Enchantment Shrine", ChunkType.SHRINE, false, 1, chunkX, chunkZ, world, biomeGrid);
+	public EnchantmentShrineChunkGen(World world, int chunkX, int chunkZ) {
+		super("Enchantment Shrine", ChunkType.SHRINE, false, 1, chunkX, chunkZ, world);
 	}
 	
 	@Override
 	public ChunkData generate(ChunkData chunkData) {
-		Random random = this.createRandom();
+		Random random = this.createRandom(chunkX, chunkZ);
 		for(int i = 0; i <= random.nextInt(5) + 15; i++){
 			int platformX = 1 + random.nextInt(14);
 			int platformZ = 1 + random.nextInt(14);

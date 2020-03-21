@@ -4,20 +4,19 @@ import java.util.Random;
 
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.generator.ChunkGenerator.BiomeGrid;
 import org.bukkit.generator.ChunkGenerator.ChunkData;
 
 import core.ChunkGen;
 import core.ChunkType;
 
 public class StoneMineChunkGen extends ChunkGen{
-	public StoneMineChunkGen(World world, int chunkX, int chunkZ, BiomeGrid biomeGrid) {
-		super("Stone Mine", ChunkType.RESOURCES, false, 1, chunkX, chunkZ, world, biomeGrid);
+	public StoneMineChunkGen(World world, int chunkX, int chunkZ) {
+		super("Stone Mine", ChunkType.RESOURCES, false, 1, chunkX, chunkZ, world);
 	}
 
 	@Override
 	public ChunkData generate(ChunkData chunkData) {
-		Random random = this.createRandom();
+		Random random = this.createRandom(chunkX, chunkZ);
 		//generate Underground Stone
 		
 		int mineDepth = 8;

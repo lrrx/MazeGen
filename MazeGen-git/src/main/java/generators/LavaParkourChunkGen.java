@@ -4,21 +4,20 @@ import java.util.Random;
 
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.generator.ChunkGenerator.BiomeGrid;
 import org.bukkit.generator.ChunkGenerator.ChunkData;
 
 import core.ChunkGen;
 import core.ChunkType;
 
 public class LavaParkourChunkGen extends ChunkGen{
-	public LavaParkourChunkGen(World world, int chunkX, int chunkZ, BiomeGrid biomeGrid) {
-		super("Lava Parkour", ChunkType.PARKOUR, false, 1, chunkX, chunkZ, world, biomeGrid);
+	public LavaParkourChunkGen(World world, int chunkX, int chunkZ) {
+		super("Lava Parkour", ChunkType.PARKOUR, false, 1, chunkX, chunkZ, world);
 	}
 	
 	
 	@Override
 	public ChunkData generate(ChunkData chunkData) {
-		Random random = this.createRandom();
+		Random random = this.createRandom(chunkX, chunkZ);
 		chunkData.setRegion(1, baseHeight, 1, 15 + 1, baseHeight + 1, 15 + 1, Material.AIR);
 		chunkData.setRegion(1, baseHeight - 8, 1, 15 + 1, baseHeight, 15 + 1, Material.LAVA);
 		for(int i = 0; i <= random.nextInt(5) + 10; i++){

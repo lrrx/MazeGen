@@ -2,15 +2,14 @@ package generators;
 
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.generator.ChunkGenerator.BiomeGrid;
 import org.bukkit.generator.ChunkGenerator.ChunkData;
 
 import core.ChunkGen;
 import core.ChunkType;
 
 public class WaterChunkGen extends ChunkGen{
-	public WaterChunkGen(World world, int chunkX, int chunkZ, BiomeGrid biomeGrid) {
-		super("Water Floor", ChunkType.OBSTACLE, false, 1, chunkX, chunkZ, world, biomeGrid);
+	public WaterChunkGen(World world, int chunkX, int chunkZ) {
+		super("Water Floor", ChunkType.OBSTACLE, false, 1, chunkX, chunkZ, world);
 	}
 
 	@Override

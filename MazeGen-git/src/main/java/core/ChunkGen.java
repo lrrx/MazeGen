@@ -7,7 +7,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.generator.ChunkGenerator.BiomeGrid;
 import org.bukkit.generator.ChunkGenerator.ChunkData;
-import org.bukkit.util.noise.SimplexOctaveGenerator;
 
 public class ChunkGen {
 	private String name;
@@ -33,14 +32,14 @@ public class ChunkGen {
 
 	protected int chunkX;
 	protected int chunkZ;
-	protected World world;
-	private BiomeGrid biomeGrid;
+	protected static World world;
+	private static BiomeGrid biomeGrid;
 	
-	protected int baseHeight = 16;
-	protected int wallHeight = 16;
-	protected Material baseMaterial = Material.BEDROCK;
+	protected static int baseHeight = 16;
+	protected static int wallHeight = 16;
+	protected static Material baseMaterial = Material.BEDROCK;
 	
-	public ChunkGen(String name, ChunkType type, boolean isMultiChunk, int size, int chunkX, int chunkZ, World world, BiomeGrid biomeGrid) {
+	public ChunkGen(String name, ChunkType type, boolean isMultiChunk, int size, int chunkX, int chunkZ, World world) {
 		this.name = name;
 		this.type = type;
 		this.isMultiChunk = isMultiChunk;
@@ -49,26 +48,29 @@ public class ChunkGen {
 		this.chunkX = chunkX;
 		this.chunkZ = chunkZ;
 		this.world = world;
-		this.biomeGrid = biomeGrid;
 	}
 	
-	public Random createRandom() {
-		return new Random((long) (this.noise(chunkX, chunkZ, world) * 2147483647D));
+	public Random createRandom(int chunkX, int chunkZ) {
+		return new Random((long) (NoiseGen.noise(chunkX, chunkZ, world) * 2147483647D));
 	}
 	
-	public double noise(int chunkX, int chunkZ, World world) {
-		SimplexOctaveGenerator generator = new SimplexOctaveGenerator(new Random(), 4);
-		generator.setScale(0.005D);
-		return generator.noise(chunkX * 16 , chunkZ * 16 , 0.2D, 0.4D);
+	public void fillChunkRegionPopulate(int x1, int y1, int z1, int x2, int y2, int z2, Material material, Chunk chunk) {
+		for(int x = x1; x <= x2; x++) {
+			for(int y = y1; y <= y2; y++) {
+				for(int z = z1; z <= z2; z++) {
+					this.world.getBlockAt(chunk.getBlock(x, y, z).getLocation()).setType(material);
+				}
+			}
+		}
 	}
-	
-	public double largeNoise(int chunkX, int chunkZ, World world) {
-		SimplexOctaveGenerator generator = new SimplexOctaveGenerator(new Random(world.getSeed()), 4);
-		generator.setScale(0.001D);
-		return generator.noise(chunkX * 16 , chunkZ * 16 , 0.2D, 0.4D);
+
+	public void setChunkBlockPopulate(int x, int y, int z, Material material, Chunk chunk) {
+		world.getBlockAt(chunk.getBlock(x, y, z).getLocation()).setType(material);
 	}
 	
 	public ChunkData generate(ChunkData chunkData) {
 		return chunkData;
 	}
+
+	public void populate(Chunk chunk) {}
 }
