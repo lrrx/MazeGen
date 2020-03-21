@@ -1,5 +1,4 @@
 # MazeGen
-A Minecraft World Generator Plugin
 
 MazeGen is a Spigot/Bukkit/PaperMC plugin that turns your Minecraft world into an infinite, randomly generated maze.
 
