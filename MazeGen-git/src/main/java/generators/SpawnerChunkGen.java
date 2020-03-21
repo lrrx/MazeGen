@@ -69,18 +69,24 @@ public class SpawnerChunkGen extends ChunkGen{
 
 	@Override
 	public ChunkData generate(ChunkData chunkData) {
+		Random random = createRandom(chunkX, chunkZ);
+		
+		int spawnerX = random.nextInt(8) + 4;
+    	int spawnerZ = random.nextInt(8) + 4;
+        
+    	chunkData.setRegion(spawnerX - 2, baseHeight + 1, spawnerZ - 2, spawnerX + 3 , baseHeight + 2, spawnerZ + 3, Material.OBSIDIAN);
+    	chunkData.setRegion(spawnerX - 1, baseHeight + 2, spawnerZ - 1, spawnerX + 2 , baseHeight + 3, spawnerZ + 2, Material.OBSIDIAN);
 		return chunkData;
 	}
 	
 	@Override
 	public void populate(Chunk chunk) {
 		Random random = createRandom(chunkX, chunkZ);
+		
 		int spawnerX = random.nextInt(8) + 4;
     	int spawnerZ = random.nextInt(8) + 4;
-        
-    	fillChunkRegionPopulate(spawnerX - 2, baseHeight + 1, spawnerZ - 2, spawnerX + 2 , baseHeight + 1, spawnerZ + 2, Material.OBSIDIAN, chunk);
-    	fillChunkRegionPopulate(spawnerX - 1, baseHeight + 2, spawnerZ - 1, spawnerX + 1 , baseHeight + 2, spawnerZ + 1, Material.OBSIDIAN, chunk);
-    	Block spawnerBlock = world.getBlockAt(chunk.getBlock(spawnerX, baseHeight + 3, spawnerZ).getLocation());
+		
+		Block spawnerBlock = world.getBlockAt(chunk.getBlock(spawnerX, baseHeight + 3, spawnerZ).getLocation());
         spawnerBlock.setType(Material.SPAWNER);
         BlockState blockState = spawnerBlock.getState();
         CreatureSpawner spawner = ((CreatureSpawner)blockState);
