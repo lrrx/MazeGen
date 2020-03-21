@@ -32,8 +32,8 @@ public class ChunkGen {
 
 	protected int chunkX;
 	protected int chunkZ;
-	protected static World world;
-	private static BiomeGrid biomeGrid;
+	protected World world;
+	private BiomeGrid biomeGrid;
 	
 	protected static int baseHeight = 16;
 	protected static int wallHeight = 16;
