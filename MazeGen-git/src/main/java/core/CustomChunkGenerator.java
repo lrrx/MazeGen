@@ -16,7 +16,7 @@ import generators.*;
 @SuppressWarnings("unused")
 public class CustomChunkGenerator extends ChunkGenerator {
 
-	//toggle verbose logging
+	//atoggle verbose logging
 	private boolean debugEnabled = false;
 	
 	//height of ground
