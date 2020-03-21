@@ -8,6 +8,6 @@ To enable the world generator, put the compiled jar into your plugins folder add
 
 ```yaml
 worlds:
-      world:
-          generator: MazeGen
+  world:
+    generator: MazeGen
 ```
