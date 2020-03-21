@@ -73,35 +73,11 @@ public class LootChunkGen extends ChunkGen{
 
 		Object[] lootMaterials = lootChanceMap.keySet().toArray();
 
-		/*fillChunkRegion(4, baseHeight + 2, 4, 4, baseHeight + 2, 12, Material.STONE_BRICK_WALL, chunk);
-		fillChunkRegion(12, baseHeight + 2, 4, 12, baseHeight + 2, 12, Material.STONE_BRICK_WALL, chunk);
-		fillChunkRegion(4, baseHeight + 2, 4, 12, baseHeight + 2, 4, Material.STONE_BRICK_WALL, chunk);
-		fillChunkRegion(4, baseHeight + 2, 12, 12, baseHeight + 2, 12, Material.STONE_BRICK_WALL, chunk);
-
-		setChunkBlock(4, baseHeight + 2, 8, Material.AIR, chunk);
-		setChunkBlock(12, baseHeight + 2, 8, Material.AIR, chunk);
-		setChunkBlock(8, baseHeight + 2, 4, Material.AIR, chunk);
-		setChunkBlock(8, baseHeight + 2, 12, Material.AIR, chunk);*/
-
 		Block b = world.getBlockAt(chunk.getBlock(8, baseHeight + 2, 8).getLocation());
 		b.setType(Material.CHEST);
-		/*fillChunkRegion_p(7, baseHeight - 2, 7, 9, baseHeight + 0, 9, Material.AIR, chunk);
-		setChunkBlock_p(8, baseHeight - 2, 8, baseMaterial, chunk);
-		setChunkBlock_p(8, baseHeight - 1, 8, Material.POWERED_RAIL, chunk);*/
-
-		/*Block dispenserBlock = world.getBlockAt(chunk.getBlock(8, baseHeight + 0, 8).getLocation());
-		dispenserBlock.setType(Material.DISPENSER);
-		Directional directional = (Directional) dispenserBlock;
-		directional.setFacing(BlockFace.DOWN);
-		Container disp = (Container) dispenserBlock.getState();
-		disp.getInventory().setItem(0, new ItemStack(Material.TNT_MINECART, 1));*/
-
-		/*for(int i = 0; i <= 3; i++) {
-			world.spawnEntity(chunk.getBlock(8, baseHeight - 1, 8).getLocation(), EntityType.MINECART_TNT);
-		}*/
 		Chest chest = (Chest) b.getState();
 		Inventory inventory = chest.getBlockInventory();
-		//inventory.clear();
+		inventory.clear();
 
 		for(int i = 0; i < inventory.getSize(); i++) {
 			int randomIndex = random.nextInt(lootMaterials.length);
