@@ -119,6 +119,9 @@ public class GeneratorChooser {
 		else if (1101 <= n && n <= 1130) {
 			cg = new LavaHolesChunkGen(world, chunkX, chunkZ);
 		}
+		else if (1201 <= n && n <= 1230) {
+			cg = new MeadowChunkGen(world, chunkX, chunkZ);
+		}
 		else {
 			cg = new EmptyChunkGen(world, chunkX, chunkZ);
 		}
