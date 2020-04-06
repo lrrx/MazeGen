@@ -19,7 +19,7 @@ public class EmptyChunkGen extends ChunkGen{
 	public ChunkData generate(ChunkData chunkData) {
 		Random random = createRandom(chunkX, chunkZ);
 		for(int i = 0; i <= 5 + random.nextInt(10); i++) {
-			chunkData.setBlock(1 + random.nextInt(15), baseHeight + 1, 1 + random.nextInt(15), Material.OBSIDIAN);
+			chunkData.setBlock(1 + random.nextInt(15), baseHeight, 1 + random.nextInt(15), Material.OBSIDIAN);
 		}
 		return chunkData;
 	}
