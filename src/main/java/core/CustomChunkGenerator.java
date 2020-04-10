@@ -158,7 +158,7 @@ public class CustomChunkGenerator extends ChunkGenerator {
 	
 	@Nullable
 	public Location getFixedSpawnLocation​(@Nonnull World world, @Nonnull Random random) {
-		return new Location(world, baseHeight, baseHeight, baseHeight);	
+		return new Location(world, 0, baseHeight + 1, 0);
 	}
 	
 	@Override
