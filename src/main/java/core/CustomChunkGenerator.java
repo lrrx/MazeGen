@@ -5,6 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.generator.BlockPopulator;
@@ -18,22 +23,22 @@ public class CustomChunkGenerator extends ChunkGenerator {
 
 	//toggle verbose logging
 	private boolean debugEnabled = false;
-	
+
 	//height of ground
 	private int baseHeight = 16;
-	
+
 	//height of normal walls
 	private int wallHeight = 16;
-	
+
 	//main maze material
 	private Material baseMaterial = Material.BEDROCK;
-	
+
 	//toggle highways
 	boolean highwaysEnabled = false;
-	
+
 	//size of the empty spawn area
 	private int spawnSize = 2;
-	
+
 	@Override
 	public List<BlockPopulator> getDefaultPopulators(World world) {
 		//maze populator hook
@@ -63,10 +68,10 @@ public class CustomChunkGenerator extends ChunkGenerator {
 	}
 
 	public ChunkData generateWalls(int chunkX, int chunkZ, Random random, World world, ChunkData chunkData) {
-		
+
 		boolean omitX = random.nextInt(1000) <= 60;
 		boolean omitZ = random.nextInt(1000) <= 60;
-		
+
 		if(chunkX % 256 == 0 && chunkZ % 256 == 0 && highwaysEnabled) {
 			//no walls
 		}
@@ -123,10 +128,39 @@ public class CustomChunkGenerator extends ChunkGenerator {
 				chunkData = closeZWall(chunkData);
 			}
 		}
-	
+
 		return chunkData;
 	}
+	
+	@Override
+	public boolean isParallelCapable() {
+		return true;
+	}
 
+	@Override
+	public boolean shouldGenerateCaves() {
+		return false;
+	}
+
+	@Override
+	public boolean shouldGenerateDecorations() {
+		return false;
+	}
+
+	@Override
+	public boolean shouldGenerateMobs() {
+		return true;
+	}
+	
+	public boolean shouldGenerateStructures() {
+		return false;
+	}
+	
+	@Nullable
+	public Location getFixedSpawnLocation​(@Nonnull World world, @Nonnull Random random) {
+		return new Location(world, baseHeight, baseHeight, baseHeight);	
+	}
+	
 	@Override
 	public ChunkData generateChunkData(World world, Random random, int chunkX, int chunkZ, BiomeGrid biomeGrid) {
 
@@ -140,7 +174,7 @@ public class CustomChunkGenerator extends ChunkGenerator {
 		/*if (((int) (chunkNoise * 4D)) >= 7) {
 			wallHeight =  16 + 16;
 		}*/
-		
+
 		//use chunkNoise as the seed for random generation in this chunk
 		random = new Random((long) (chunkNoise * 2147483647D));
 
@@ -148,17 +182,17 @@ public class CustomChunkGenerator extends ChunkGenerator {
 		chunkData.setRegion(0, 0, 0, 16, baseHeight + 1, 16, baseMaterial);
 
 		long startNanos = System.nanoTime();
-		
+
 		if (debugEnabled) {
 			System.out.println("chunkX: " + chunkX + "chunkZ: " + chunkZ + "Noise: " + chunkNoise);
 		}
 
 		//choose a chunk generator
 		ChunkGen cg = GeneratorChooser.getChunkGen(chunkX, chunkZ, highwaysEnabled, spawnSize, chunkNoise, world);
-		
+
 		//let cg generate into chunkData
 		chunkData = cg.generate(chunkData);
-		
+
 		if (debugEnabled) {
 			System.out.println("Nanos: " + (System.nanoTime() - startNanos) + "\t Type: " + cg.getName());
 		}
@@ -167,7 +201,7 @@ public class CustomChunkGenerator extends ChunkGenerator {
 		if (!(GeneratorChooser.isForest(chunkX, chunkZ, world)) && !(Math.abs(chunkX) <= spawnSize && Math.abs(chunkZ) <= spawnSize)){
 			chunkData = generateWalls(chunkX, chunkZ, random, world, chunkData);
 		}
-		
+
 		//finally, return the generated chunkData
 		return chunkData;
 	}
