@@ -55,7 +55,7 @@ public class GeneratorChooser {
 	public static ChunkGen getChunkGen(int chunkX, int chunkZ, boolean highwaysEnabled, int spawnSize, double chunkNoise, World world) {
 		ChunkGen cg = new EmptyChunkGen(world, chunkX, chunkZ);
 		//generate random integer for room generation choice
-		int n = Math.abs(((int) (chunkNoise * 2147483647D)) % 1300);
+		int n = Math.abs(((int) (chunkNoise * 2147483647D)) % 1400);
 
 		//System.out.println("___________________________n: " + n);
 		
@@ -79,13 +79,13 @@ public class GeneratorChooser {
 		}
 		//only generate LavaChunk if there is no forest close to it
 		else if(1 <= n && n <= 30) {
-			if (!isForestNear(chunkX, chunkZ, world)){
+			if (!isForestNear(chunkX, chunkZ, world)) {
 				cg = new LavaChunkGen(world, chunkX, chunkZ);
 			}
 		}
 		//only generate LavaParkourChunk if there is no forest close to it
 		else if (101 <= n && n <= 130) {
-			if (!isForestNear(chunkX, chunkZ, world)){
+			if (!isForestNear(chunkX, chunkZ, world)) {
 				cg = new LavaParkourChunkGen(world, chunkX, chunkZ);
 			}
 		}
@@ -121,6 +121,9 @@ public class GeneratorChooser {
 		}
 		else if (1201 <= n && n <= 1230) {
 			cg = new MeadowChunkGen(world, chunkX, chunkZ);
+		}
+		else if (1301 <= n && n <= 1330) {
+			cg = new DesertChunkGen(world, chunkX, chunkZ);
 		}
 		else {
 			cg = new EmptyChunkGen(world, chunkX, chunkZ);
