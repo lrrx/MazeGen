@@ -5,7 +5,7 @@ It is compatible with the current 1.15.2 release of the game and the respective 
 
 ## Building
 
-There are up-to-date builds of the current master available [here](https://github.com/DevMiner2/CIReleases/releases).
+There are up-to-date builds of the current master available [here](https://github.com/DevMiner-BuildBot/MazeGen-Builds/releases).
 
 To build MazeGen, run the `install` task from your IDE in the Maven section or run this command from your command line.
 
