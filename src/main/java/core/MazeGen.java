@@ -9,6 +9,8 @@ public class MazeGen extends JavaPlugin{
         // TODO Insert logic to be performed when the plugin is enabled
     }
     
+	
+	
     @Override
     public void onDisable() {
     	getLogger().info("MazeGen was disabled!");
@@ -17,7 +19,7 @@ public class MazeGen extends JavaPlugin{
     
     @Override
     public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
-    	System.out.println("overriding world generator");
+    	System.out.println("Overriding world generator");
         return new CustomChunkGenerator();
     }
 }

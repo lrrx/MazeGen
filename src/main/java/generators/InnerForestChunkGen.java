@@ -71,22 +71,28 @@ public class InnerForestChunkGen extends ChunkGen{
 
 		return chunkData;
 	}
-	
+
 	@Override
 	public void populate(Chunk chunk) {
 		Random random = this.createRandom(chunk.getX(), chunk.getZ());
 		SimplexOctaveGenerator generator = new SimplexOctaveGenerator(new Random(world.getSeed()), 8);
 		generator.setScale(0.025D);
-		int amount = random.nextInt(2) + 2;  // Amount of trees
+		int amount = random.nextInt(3) + 7;  // Amount of trees
 		for (int i = 1; i < amount; i++) {
 			int X = random.nextInt(15);
 			int Z = random.nextInt(15);
 			int Y;
-			
+
 			int noise = (int) (generator.noise(chunk.getX() * 16 + X, chunk.getZ() * 16 + Z, 0.2D, 0.4D) * 3);
 			Y = noise + baseHeight;
-			
-			world.generateTree(chunk.getBlock(X, Y, Z).getLocation(), TreeType.TREE);
+
+			TreeType tt = TreeType.TREE;
+
+			if(random.nextDouble() <= 0.5) {
+				tt = TreeType.BIG_TREE;
+			}
+
+			world.generateTree(chunk.getBlock(X, Y, Z).getLocation(), tt);
 		}
 	}
 }

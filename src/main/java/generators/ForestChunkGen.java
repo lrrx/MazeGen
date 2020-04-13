@@ -77,7 +77,7 @@ public class ForestChunkGen extends ChunkGen{
 		Random random = this.createRandom(chunkX, chunkZ);
 		SimplexOctaveGenerator generator = new SimplexOctaveGenerator(new Random(world.getSeed()), 8);
 		generator.setScale(0.025D);
-		int amount = random.nextInt(5) + 5;  // Amount of trees
+		int amount = random.nextInt(3) + 2;  // Amount of trees
 		for (int i = 1; i < amount; i++) {
 			int X = random.nextInt(15);
 			int Z = random.nextInt(15);
@@ -86,13 +86,7 @@ public class ForestChunkGen extends ChunkGen{
 			int noise = (int) (generator.noise(chunk.getX() * 16 + X, chunk.getZ() * 16 + Z, 0.2D, 0.4D) * 3);
 			Y = noise + baseHeight;
 
-			TreeType tt = TreeType.TREE;
-			
-			if(random.nextDouble() <= 0.3) {
-				tt = TreeType.BIG_TREE;
-			}
-			
-			world.generateTree(chunk.getBlock(X, Y, Z).getLocation(), tt);
+			world.generateTree(chunk.getBlock(X, Y, Z).getLocation(), TreeType.TREE);
 		}
 	}
 }

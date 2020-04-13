@@ -9,7 +9,7 @@ public class GeneratorChooser {
 
 	public static boolean isForest(int chunkX, int chunkZ, World world) {
 		
-		if(((int) (NoiseGen.noise(chunkX, chunkZ, world) * 8D)) > 6) {
+		if(NoiseGen.noise(chunkX, chunkZ, world) > 0.7) {
 			return true;
 		}
 		else {
@@ -19,7 +19,7 @@ public class GeneratorChooser {
 	
 	public static boolean isInnerForest(int chunkX, int chunkZ, World world) {
 		
-		if(((int) (NoiseGen.noise(chunkX, chunkZ, world) * 8D)) > 7) {
+		if(NoiseGen.noise(chunkX, chunkZ, world) > 0.85) {
 			return true;
 		}
 		else {
@@ -29,8 +29,10 @@ public class GeneratorChooser {
 	
 	public static boolean isMazeChunk(int chunkX, int chunkZ, World world) {
 		double chunkNoise = NoiseGen.noise(chunkX, chunkZ, world);
-		int chunkNoiseInt = (int) (chunkNoise * 4D);
-		if ((chunkNoiseInt == 2) || chunkNoiseInt == -1) {
+		if (0.4 < chunkNoise && chunkNoise <= 0.7) {
+			return true;
+		}
+		else if (-0.4 < chunkNoise && chunkNoise <= -0.2) {
 			return true;
 		}
 		else {

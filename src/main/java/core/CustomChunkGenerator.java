@@ -12,15 +12,18 @@ import javax.annotation.Nullable;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
+import org.bukkit.generator.ChunkGenerator.BiomeGrid;
+import org.bukkit.generator.ChunkGenerator.ChunkData;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
 
 import generators.*;
 
 @SuppressWarnings("unused")
 public class CustomChunkGenerator extends ChunkGenerator {
-
+	
 	//toggle verbose logging
 	private boolean debugEnabled = false;
 
@@ -44,7 +47,7 @@ public class CustomChunkGenerator extends ChunkGenerator {
 		//maze populator hook
 		return Arrays.asList((BlockPopulator)new MazePopulator(this.baseHeight, this.wallHeight, this.baseMaterial, world));
 	}
-
+	
 	public ChunkData generateXWall(ChunkData chunkData) {
 		chunkData.setRegion(0, baseHeight + 1, 0, 1, baseHeight + wallHeight + 1, 7, baseMaterial);
 		chunkData.setRegion(0, baseHeight + 1, 10, 1, baseHeight + wallHeight + 1, 16, baseMaterial);
@@ -132,38 +135,20 @@ public class CustomChunkGenerator extends ChunkGenerator {
 		return chunkData;
 	}
 	
-	@Override
-	public boolean isParallelCapable() {
-		return true;
-	}
-
-	@Override
-	public boolean shouldGenerateCaves() {
-		return false;
-	}
-
-	@Override
-	public boolean shouldGenerateDecorations() {
-		return false;
-	}
-
-	@Override
-	public boolean shouldGenerateMobs() {
-		return true;
-	}
 	
-	public boolean shouldGenerateStructures() {
-		return false;
-	}
-	
-	@Nullable
-	public Location getFixedSpawnLocation​(@Nonnull World world, @Nonnull Random random) {
-		return new Location(world, 0, baseHeight + 1, 0);
-	}
 	
 	@Override
 	public ChunkData generateChunkData(World world, Random random, int chunkX, int chunkZ, BiomeGrid biomeGrid) {
-
+		
+		for(int x = 0; x <= 15; x++) {
+			for(int y = 0; y <= 15; y++) {
+				for(int z = 0; z <= 255; z++) {
+					biomeGrid.setBiome(chunkX * 16 + x, y, chunkZ * 16 + z, Biome.SWAMP);
+				}
+			}
+		}
+		
+		
 		//get chunkData reference for chunk
 		ChunkData chunkData = createChunkData(world);
 
@@ -201,8 +186,37 @@ public class CustomChunkGenerator extends ChunkGenerator {
 		if (!(GeneratorChooser.isForest(chunkX, chunkZ, world)) && !(Math.abs(chunkX) <= spawnSize && Math.abs(chunkZ) <= spawnSize)){
 			chunkData = generateWalls(chunkX, chunkZ, random, world, chunkData);
 		}
-
+		
 		//finally, return the generated chunkData
 		return chunkData;
+	}
+	
+	@Override
+	public boolean isParallelCapable() {
+		return true;
+	}
+
+	@Override
+	public boolean shouldGenerateCaves() {
+		return false;
+	}
+
+	@Override
+	public boolean shouldGenerateDecorations() {
+		return false;
+	}
+
+	@Override
+	public boolean shouldGenerateMobs() {
+		return true;
+	}
+	
+	public boolean shouldGenerateStructures() {
+		return false;
+	}
+	
+	@Nullable
+	public Location getFixedSpawnLocation​(@Nonnull World world, @Nonnull Random random) {
+		return new Location(world, 0, baseHeight + 1, 0);
 	}
 }	
