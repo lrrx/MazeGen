@@ -28,19 +28,19 @@ public class CustomChunkGenerator extends ChunkGenerator {
 	private boolean debugEnabled = false;
 
 	//height of ground
-	private int baseHeight = 16;
+	private int baseHeight = ChunkGen.getBaseHeight();
 
 	//height of normal walls
-	private int wallHeight = 16;
+	private int wallHeight = ChunkGen.getWallHeight();
 
 	//main maze material
-	private Material baseMaterial = Material.BEDROCK;
+	private Material baseMaterial = ChunkGen.getBaseMaterial();
 
 	//toggle highways
 	boolean highwaysEnabled = false;
 
 	//size of the empty spawn area
-	private int spawnSize = 2;
+	private int spawnSize = ChunkGen.getSpawnSize();
 
 	@Override
 	public List<BlockPopulator> getDefaultPopulators(World world) {
@@ -207,7 +207,7 @@ public class CustomChunkGenerator extends ChunkGenerator {
 
 		//Generate Ground
 		if (doGroundPregeneration){
-			chunkData.setRegion(0, 0, 0, 16, baseHeight + 1, 16, baseMaterial);
+			chunkData.setRegion(0, 8, 0, 15 + 1, baseHeight + 1, 15 + 1, baseMaterial);
 		}
 
 		long startNanos = System.nanoTime();
@@ -232,13 +232,13 @@ public class CustomChunkGenerator extends ChunkGenerator {
 		}
 
 		//generate pylons
-		if ((chunkX % 32 == 0 && chunkZ % 4 == 0)
-				|| (chunkZ % 32 == 0 && chunkX % 4 == 0)) {
+		if (((chunkX + 16) % 32 == 0 && chunkZ % 4 == 0)
+				|| ((chunkZ + 16) % 32 == 0 && chunkX % 4 == 0)) {
 			chunkData = generatePylon(chunkData, !doGroundPregeneration);
 		}
 
-		//make sure the void is closed off
-		chunkData.setRegion(0, 0, 0, 16, 8, 16, baseMaterial);
+		//make sure the void is always closed off
+		chunkData.setRegion(0, 0, 0, 15 + 1, 8, 15 + 1, baseMaterial);
 
 		//finally, return the generated chunkData
 		return chunkData;

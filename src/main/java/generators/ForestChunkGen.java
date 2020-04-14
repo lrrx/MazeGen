@@ -64,7 +64,7 @@ public class ForestChunkGen extends ChunkGen{
 				}
 
 
-				chunkData.setRegion(x, baseHeight - 8 - Math.abs(noise), z, x + 1, baseHeight + noise, z + 1, Material.DIRT);
+				chunkData.setRegion(x, baseHeight - 16 - Math.abs(noise), z, x + 1, baseHeight + noise, z + 1, Material.DIRT);
 				chunkData.setBlock(x, baseHeight + noise, z, top);
 			}
 		}

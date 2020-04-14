@@ -17,19 +17,19 @@ public class MazePopulator extends BlockPopulator {
 	private boolean debugEnabled = false;
 
 	//height of ground
-	private int baseHeight = 16;
+	private int baseHeight = ChunkGen.getBaseHeight();
 
 	//height of normal walls
-	private int wallHeight = 16;
+	private int wallHeight = ChunkGen.getWallHeight();
 
 	//main maze material
-	private Material baseMaterial = Material.BEDROCK;
+	private Material baseMaterial = ChunkGen.getBaseMaterial();
 
-	//specifies wether highways are enabled
+	//toggle highways
 	boolean highwaysEnabled = false;
 
-	//specifies the size of the empty spawn area
-	private int spawnSize = 2;
+	//size of the empty spawn area
+	private int spawnSize = ChunkGen.getSpawnSize();
 	
 	//used to store World reference
 	private World world;

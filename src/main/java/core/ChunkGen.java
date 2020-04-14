@@ -35,9 +35,26 @@ public class ChunkGen {
 	protected World world;
 	private BiomeGrid biomeGrid;
 	
-	protected static int baseHeight = 16;
+	protected static int baseHeight = 96;
 	protected static int wallHeight = 16;
 	protected static Material baseMaterial = Material.BEDROCK;
+	protected static int spawnSize = 2;
+	
+	public static int getBaseHeight() {
+		return baseHeight;
+	}
+
+	public static int getWallHeight() {
+		return wallHeight;
+	}
+
+	public static Material getBaseMaterial() {
+		return baseMaterial;
+	}
+	
+	public static int getSpawnSize() {
+		return spawnSize;
+	}
 	
 	public ChunkGen(String name, ChunkType type, boolean isMultiChunk, int size, int chunkX, int chunkZ, World world) {
 		this.name = name;

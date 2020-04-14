@@ -19,7 +19,7 @@ public class LargeTowerChunkGen extends ChunkGen{
 		
 		int width = random.nextInt(6);
 		
-		chunkData.setRegion(8 - width, baseHeight, 8 - width, 9 + width, 128, 9 + width, baseMaterial);
+		chunkData.setRegion(8 - width, baseHeight, 8 - width, 9 + width, baseHeight + 128, 9 + width, baseMaterial);
 		
 		return chunkData;
 	}
