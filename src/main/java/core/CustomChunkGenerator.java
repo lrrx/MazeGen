@@ -23,7 +23,7 @@ import generators.*;
 
 @SuppressWarnings("unused")
 public class CustomChunkGenerator extends ChunkGenerator {
-	
+
 	//toggle verbose logging
 	private boolean debugEnabled = false;
 
@@ -45,9 +45,9 @@ public class CustomChunkGenerator extends ChunkGenerator {
 	@Override
 	public List<BlockPopulator> getDefaultPopulators(World world) {
 		//maze populator hook
-		return Arrays.asList((BlockPopulator)new MazePopulator(this.baseHeight, this.wallHeight, this.baseMaterial, world));
+		return  Arrays.asList((BlockPopulator)new MazePopulator(this.baseHeight, this.wallHeight, this.baseMaterial, world));
 	}
-	
+
 	public ChunkData generateXWall(ChunkData chunkData) {
 		chunkData.setRegion(0, baseHeight + 1, 0, 1, baseHeight + wallHeight + 1, 7, baseMaterial);
 		chunkData.setRegion(0, baseHeight + 1, 10, 1, baseHeight + wallHeight + 1, 16, baseMaterial);
@@ -134,37 +134,81 @@ public class CustomChunkGenerator extends ChunkGenerator {
 
 		return chunkData;
 	}
-	
-	
-	
+
+	public ChunkData generatePylon (ChunkData chunkData, boolean doUnderground) {
+		int width = 2;
+		int bottomZ = baseHeight;
+		int topZ = baseHeight + 64;
+		
+		if (doUnderground) {
+			bottomZ = 0;
+		}
+		
+		chunkData.setRegion(8 - width, bottomZ, 8 - width, 9 + width, topZ + 1, 9 + width, baseMaterial);
+		return chunkData;
+	}
+
 	@Override
 	public ChunkData generateChunkData(World world, Random random, int chunkX, int chunkZ, BiomeGrid biomeGrid) {
-		
+
+		//get chunkData reference for chunk
+		ChunkData chunkData = createChunkData(world);
+
+		Material m = Material.BEDROCK;
+
+		//for noise debugging
+		/*for(int x = 0; x <= 15; x++) {
+			for(int z = 0; z <= 15; z++) {
+				double chunkNoise = NoiseGen.noise(chunkX * 16 + x, chunkZ * 16 + z, world);
+				double chunkLargeNoise = NoiseGen.largeNoise(chunkX * 16 + x, chunkZ * 16 + z, world);
+				m = Material.BEDROCK;
+				if (GeneratorChooser.isPlainsChunk(chunkX * 16 + x, chunkZ * 16 + x, chunkNoise, chunkLargeNoise, world)) {
+					m = Material.GRANITE;
+				}
+				else if (GeneratorChooser.isMazeChunk(chunkX * 16 + x, chunkZ * 16 + z, chunkNoise, world)) {
+					m = Material.COAL_BLOCK;
+				}
+				else if (GeneratorChooser.isInnerForest(chunkX * 16 + x, chunkZ * 16 + z, chunkNoise, world)) {
+					m = Material.COARSE_DIRT;
+				}
+				else if (GeneratorChooser.isForest(chunkX * 16 + x, chunkZ * 16 + z, chunkNoise, world)) {
+					m = Material.GRASS_BLOCK;
+				}
+
+				chunkData.setBlock(x, 100, z, m);
+				for(int y = 0; y <= 255; y++) {
+					biomeGrid.setBiome(chunkX * 16 + x, y, chunkZ * 16 + z, Biome.SWAMP);
+				}
+			}
+		}*/
+
+
 		for(int x = 0; x <= 15; x++) {
-			for(int y = 0; y <= 15; y++) {
-				for(int z = 0; z <= 255; z++) {
+			for(int z = 0; z <= 15; z++) {
+				for(int y = 0; y <= 255; y++) {
 					biomeGrid.setBiome(chunkX * 16 + x, y, chunkZ * 16 + z, Biome.SWAMP);
 				}
 			}
 		}
-		
-		
-		//get chunkData reference for chunk
-		ChunkData chunkData = createChunkData(world);
 
 		//prepare chunkNoise for use in this chunk -> store it in variable to only have one call to SimplexOctaveGenerator to save performance
-		double chunkNoise = NoiseGen.noise(chunkX, chunkZ, world);
+		double chunkNoise = NoiseGen.noise(chunkX * 16, chunkZ * 16, world);
 
-		//generate higher walls in certain areas based on chunkNoise
-		/*if (((int) (chunkNoise * 4D)) >= 7) {
-			wallHeight =  16 + 16;
-		}*/
+		double chunkLargeNoise = NoiseGen.largeNoise(chunkX * 16, chunkZ * 16, world);
 
 		//use chunkNoise as the seed for random generation in this chunk
 		random = new Random((long) (chunkNoise * 2147483647D));
 
+		boolean doGroundPregeneration = !(GeneratorChooser.isForest(chunkX * 16, chunkZ * 16, chunkNoise, world) || GeneratorChooser.isPlainsChunk(chunkX, chunkZ, chunkNoise, chunkLargeNoise, world));
+
+		boolean doWallPostgeneration = !(GeneratorChooser.isForest(chunkX * 16, chunkZ * 16, chunkNoise, world)
+				|| GeneratorChooser.isPlainsChunk(chunkX, chunkZ, chunkNoise, chunkLargeNoise, world))
+				&& !(Math.abs(chunkX) <= spawnSize && Math.abs(chunkZ) <= spawnSize);
+
 		//Generate Ground
-		chunkData.setRegion(0, 0, 0, 16, baseHeight + 1, 16, baseMaterial);
+		if (doGroundPregeneration){
+			chunkData.setRegion(0, 0, 0, 16, baseHeight + 1, 16, baseMaterial);
+		}
 
 		long startNanos = System.nanoTime();
 
@@ -173,7 +217,7 @@ public class CustomChunkGenerator extends ChunkGenerator {
 		}
 
 		//choose a chunk generator
-		ChunkGen cg = GeneratorChooser.getChunkGen(chunkX, chunkZ, highwaysEnabled, spawnSize, chunkNoise, world);
+		ChunkGen cg = GeneratorChooser.getChunkGen(chunkX, chunkZ, highwaysEnabled, spawnSize, chunkNoise, chunkLargeNoise, world);
 
 		//let cg generate into chunkData
 		chunkData = cg.generate(chunkData);
@@ -183,14 +227,23 @@ public class CustomChunkGenerator extends ChunkGenerator {
 		}
 
 		//generate walls, but not within forests or near spawn
-		if (!(GeneratorChooser.isForest(chunkX, chunkZ, world)) && !(Math.abs(chunkX) <= spawnSize && Math.abs(chunkZ) <= spawnSize)){
+		if (doWallPostgeneration){
 			chunkData = generateWalls(chunkX, chunkZ, random, world, chunkData);
 		}
-		
+
+		//generate pylons
+		if ((chunkX % 32 == 0 && chunkZ % 4 == 0)
+				|| (chunkZ % 32 == 0 && chunkX % 4 == 0)) {
+			chunkData = generatePylon(chunkData, !doGroundPregeneration);
+		}
+
+		//make sure the void is closed off
+		chunkData.setRegion(0, 0, 0, 16, 8, 16, baseMaterial);
+
 		//finally, return the generated chunkData
 		return chunkData;
 	}
-	
+
 	@Override
 	public boolean isParallelCapable() {
 		return true;
@@ -210,11 +263,11 @@ public class CustomChunkGenerator extends ChunkGenerator {
 	public boolean shouldGenerateMobs() {
 		return true;
 	}
-	
+
 	public boolean shouldGenerateStructures() {
 		return false;
 	}
-	
+
 	@Nullable
 	public Location getFixedSpawnLocation​(@Nonnull World world, @Nonnull Random random) {
 		return new Location(world, 0, baseHeight + 1, 0);

@@ -25,9 +25,6 @@ public class MazePopulator extends BlockPopulator {
 	//main maze material
 	private Material baseMaterial = Material.BEDROCK;
 
-	//used to store chunk location based perlin noise
-	private double chunkNoise;
-
 	//specifies wether highways are enabled
 	boolean highwaysEnabled = false;
 
@@ -48,15 +45,17 @@ public class MazePopulator extends BlockPopulator {
 	public void populate(World world, Random random, Chunk chunk) {
 
 		//prepare chunkNoise for use in this chunk -> store it in variable to only have one call to SimplexOctaveGenerator to save performance
-		chunkNoise = NoiseGen.noise(chunk.getX(), chunk.getZ(), world);
+		double chunkNoise = NoiseGen.noise(chunk.getX(), chunk.getZ(), world);
 
+		double chunkLargeNoise = NoiseGen.largeNoise(chunk.getX(), chunk.getZ(), world);
+		
 		//use chunkNoise as the seed for random generation in this chunk
 		random = new Random((long) (chunkNoise * 2147483647D));
 
 		world.getBlockAt(chunk.getBlock(8, 255, 8).getLocation()).setType(Material.GLOWSTONE);
 		
 		//store random chunk generator in cg
-		ChunkGen cg = GeneratorChooser.getChunkGen(chunk.getX(), chunk.getZ(), highwaysEnabled, spawnSize, chunkNoise, world);
+		ChunkGen cg = GeneratorChooser.getChunkGen(chunk.getX(), chunk.getZ(), highwaysEnabled, spawnSize, chunkNoise, chunkLargeNoise, world);
 
 		//populate the chunk
 		cg.populate(chunk);
