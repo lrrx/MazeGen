@@ -5,7 +5,6 @@ import java.util.Random;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.generator.ChunkGenerator.BiomeGrid;
 import org.bukkit.generator.ChunkGenerator.ChunkData;
 
 public class ChunkGen {
@@ -33,7 +32,6 @@ public class ChunkGen {
 	protected int chunkX;
 	protected int chunkZ;
 	protected World world;
-	private BiomeGrid biomeGrid;
 	
 	protected static int baseHeight = 96;
 	protected static int wallHeight = 16;

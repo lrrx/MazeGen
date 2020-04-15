@@ -1,6 +1,5 @@
 package core;
 
-import org.bukkit.Material;
 import org.bukkit.World;
 
 import generators.*;
@@ -8,8 +7,9 @@ import generators.*;
 public class GeneratorChooser {
 	static boolean debugEnabled = false;
 
-	public static boolean isForest(int chunkX, int chunkZ, double chunkNoise, World world) {
-
+	public static boolean isForest(int chunkX, int chunkZ, World world) {
+		double chunkNoise = NoiseGen.noise(chunkX * 16, chunkZ * 16, world);
+		
 		if(chunkNoise > 0.6) {
 			return true;
 		}
@@ -18,8 +18,11 @@ public class GeneratorChooser {
 		}
 	}
 
-	public static boolean isPlainsChunk(int chunkX, int chunkZ, double chunkNoise, double chunkLargeNoise, World world) {
-
+	public static boolean isPlainsChunk(int chunkX, int chunkZ, World world) {
+		//return true;
+		double chunkNoise = NoiseGen.noise(chunkX * 16, chunkZ * 16, world);
+		double chunkLargeNoise = NoiseGen.largeNoise(chunkX * 16, chunkZ * 16, world);
+		
 		if(chunkNoise > -0.6 && chunkLargeNoise > 0.5) {
 			return true;
 		}
@@ -28,8 +31,9 @@ public class GeneratorChooser {
 		}
 	}
 
-	public static boolean isInnerForest(int chunkX, int chunkZ, double chunkNoise, World world) {
-
+	public static boolean isInnerForest(int chunkX, int chunkZ, World world) {
+		double chunkNoise = NoiseGen.noise(chunkX * 16, chunkZ * 16, world);
+		
 		if(chunkNoise > 0.7) {
 			return true;
 		}
@@ -38,7 +42,9 @@ public class GeneratorChooser {
 		}
 	}
 
-	public static boolean isMazeChunk(int chunkX, int chunkZ, double chunkNoise, World world) {
+	public static boolean isMazeChunk(int chunkX, int chunkZ, World world) {
+		double chunkNoise = NoiseGen.noise(chunkX * 16, chunkZ * 16, world);
+		
 		if (0.4 < chunkNoise && chunkNoise <= 0.6) {
 			return true;
 		}
@@ -53,8 +59,8 @@ public class GeneratorChooser {
 	public static boolean isForestNear(int chunkX, int chunkZ, World world) {
 		for(int x = -1; x <= 1; x++) {
 			for(int z = -1; z <= 1; z++) {
-				if (isForest(chunkX, chunkZ, NoiseGen.noise(chunkX + x, chunkZ + z, world), world)
-						|| isInnerForest(chunkX, chunkZ, NoiseGen.noise(chunkX + x, chunkZ + z, world), world)) {
+				if (isForest(chunkX, chunkZ, world)
+						|| isInnerForest(chunkX, chunkZ, world)) {
 					if (debugEnabled) {
 						System.out.println("Forest is Near! chunkX: " + chunkX + " chunkZ: " + chunkZ + " x: " + x + " z: " + z);
 					}
@@ -65,8 +71,10 @@ public class GeneratorChooser {
 		return false;
 	}
 
-	public static ChunkGen getChunkGen(int chunkX, int chunkZ, boolean highwaysEnabled, int spawnSize, double chunkNoise, double chunkLargeNoise, World world) {
-
+	public static ChunkGen getChunkGen(int chunkX, int chunkZ, boolean highwaysEnabled, int spawnSize, World world) {
+		
+		double chunkNoise = NoiseGen.noise(chunkX * 16, chunkZ * 16, world);
+		
 		ChunkGen cg = new EmptyChunkGen(world, chunkX, chunkZ);
 		//generate random integer for room generation choice
 		int n = Math.abs(((int) (chunkNoise * 2147483647D)) % 1400);
@@ -81,17 +89,17 @@ public class GeneratorChooser {
 		else if(Math.abs(chunkX) <= spawnSize && Math.abs(chunkZ) <= spawnSize) {
 			cg = new EmptyChunkGen(world, chunkX, chunkZ);
 		}
-		else if (isPlainsChunk(chunkX, chunkZ, chunkNoise, chunkLargeNoise, world)) {
+		else if (isPlainsChunk(chunkX, chunkZ, world)) {
 			cg = new PlainsChunkGen(world, chunkX, chunkZ);
 		}
 		//use chunkNoise to decide what type of room (Maze/Forest) to generate
-		else if(isMazeChunk(chunkX, chunkZ, chunkNoise, world)) {
+		else if(isMazeChunk(chunkX, chunkZ, world)) {
 			cg = new MazeChunkGen(world, chunkX, chunkZ);
 		}
-		else if (isInnerForest(chunkX, chunkZ, chunkNoise, world)) {
+		else if (isInnerForest(chunkX, chunkZ, world)) {
 			cg = new InnerForestChunkGen(world, chunkX, chunkZ);
 		}
-		else if (isForest(chunkX, chunkZ, chunkNoise, world)) {
+		else if (isForest(chunkX, chunkZ, world)) {
 			cg = new ForestChunkGen(world, chunkX, chunkZ);
 		}
 		//only generate LavaChunk if there is no forest close to it

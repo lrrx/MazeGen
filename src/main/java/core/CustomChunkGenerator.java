@@ -199,10 +199,10 @@ public class CustomChunkGenerator extends ChunkGenerator {
 		//use chunkNoise as the seed for random generation in this chunk
 		random = new Random((long) (chunkNoise * 2147483647D));
 
-		boolean doGroundPregeneration = !(GeneratorChooser.isForest(chunkX * 16, chunkZ * 16, chunkNoise, world) || GeneratorChooser.isPlainsChunk(chunkX, chunkZ, chunkNoise, chunkLargeNoise, world));
+		boolean doGroundPregeneration = !(GeneratorChooser.isForest(chunkX, chunkZ, world) || GeneratorChooser.isPlainsChunk(chunkX, chunkZ, world));
 
-		boolean doWallPostgeneration = !(GeneratorChooser.isForest(chunkX * 16, chunkZ * 16, chunkNoise, world)
-				|| GeneratorChooser.isPlainsChunk(chunkX, chunkZ, chunkNoise, chunkLargeNoise, world))
+		boolean doWallPostgeneration = !(GeneratorChooser.isForest(chunkX, chunkZ, world)
+				|| GeneratorChooser.isPlainsChunk(chunkX, chunkZ, world))
 				&& !(Math.abs(chunkX) <= spawnSize && Math.abs(chunkZ) <= spawnSize);
 
 		//Generate Ground
@@ -217,7 +217,7 @@ public class CustomChunkGenerator extends ChunkGenerator {
 		}
 
 		//choose a chunk generator
-		ChunkGen cg = GeneratorChooser.getChunkGen(chunkX, chunkZ, highwaysEnabled, spawnSize, chunkNoise, chunkLargeNoise, world);
+		ChunkGen cg = GeneratorChooser.getChunkGen(chunkX, chunkZ, highwaysEnabled, spawnSize, world);
 
 		//let cg generate into chunkData
 		chunkData = cg.generate(chunkData);

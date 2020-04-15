@@ -2,9 +2,7 @@ package generators;
 
 import java.util.Random;
 
-import org.bukkit.Chunk;
 import org.bukkit.Material;
-import org.bukkit.TreeType;
 import org.bukkit.World;
 import org.bukkit.generator.ChunkGenerator.ChunkData;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
@@ -15,38 +13,61 @@ import core.NoiseGen;
 
 public class PlainsChunkGen extends ChunkGen{
 	public PlainsChunkGen(World world, int chunkX, int chunkZ) {
-		super("Forest", ChunkType.FOREST, false, 1, chunkX, chunkZ, world);
+		super("Plains", ChunkType.NEUTRAL, false, 1, chunkX, chunkZ, world);
 	}
 
 	public double terrainTransformFunction(double x) {
-		return ((1024 * Math.pow((x - 1) , 6) - 24 ));
+		return ((8096 * Math.pow((x - 1) , 8) - 32 ));
 	}
-	
+
 	@Override
 	public ChunkData generate(ChunkData chunkData) {
 		Random random = this.createRandom(chunkX, chunkZ);
 
 		//generate landscape
-		
+
 		//replace 
-		//SimplexOctaveGenerator generator = new SimplexOctaveGenerator(new Random(world.getSeed()), 4);
-		//generator.setScale(0.005D);
-		
-		SimplexOctaveGenerator bumpsGenerator = new SimplexOctaveGenerator(new Random(world.getSeed()), 2);
+		SimplexOctaveGenerator cracksGenerator = new SimplexOctaveGenerator(new Random(world.getSeed()), 4);
+		cracksGenerator.setScale(0.001D);
+
+
+		SimplexOctaveGenerator bumpsGenerator = new SimplexOctaveGenerator(new Random(world.getSeed()), 6);
 		bumpsGenerator.setScale(0.03D);
-		
+
 		SimplexOctaveGenerator detailGenerator = new SimplexOctaveGenerator(new Random(world.getSeed()), 4);
 		detailGenerator.setScale(0.3D);
 
 		for(int x = 0; x <= 16; x++) {
 			for(int z = 0; z <= 16; z++) {
-				int noise = (int) (terrainTransformFunction(NoiseGen.largeNoise(chunkX * 16 + x, chunkZ * 16 + z, world)));
-				int bumpsNoise = (int) (bumpsGenerator.noise(chunkX * 16 + x, chunkZ * 16 + z, 0.5D, 0.5D, true) * 2);
-				int detailNoise = (int) (detailGenerator.noise(chunkX * 16 + x, chunkZ * 16 + z, 0.2D, 0.4D, true) * 3);
-				Material top = Material.SANDSTONE;;
+				boolean generateCrack = false;
 
-				int groundHeight = noise + bumpsNoise;
-				
+				int noise = (int) (terrainTransformFunction(NoiseGen.largeNoise(chunkX * 16 + x, chunkZ * 16 + z, world))); //=-16
+				int bumpsNoise = (int) (bumpsGenerator.noise(chunkX * 16 + x, chunkZ * 16 + z, 0.5D, 0.5D, true) * 10);
+
+				int cracksNoise;
+
+				int cracksOffset = 8096;
+				for (int i = 0; i < 4; i ++) {
+					int n = (int) (Math.pow(Math.abs(cracksGenerator.noise(chunkX * 16 + x + i * cracksOffset, chunkZ * 16 + z + i * cracksOffset, 0.5D, 0.5D, true)) * 200 + 1, 2));
+					if (n == 1) {
+						cracksNoise = n;
+						generateCrack = true;
+						break;	
+					}
+				}
+
+				int detailNoise = (int) (detailGenerator.noise(chunkX * 16 + x, chunkZ * 16 + z, 0.2D, 0.4D, true) * 4);
+				Material top = Material.SANDSTONE;
+
+				int groundHeight = noise;// + bumpsNoise;
+
+				if (generateCrack) {
+					groundHeight = noise - Math.abs(bumpsNoise) - ((int) (Math.abs(detailNoise) / 2)) - 5;
+				}
+				else if (bumpsNoise >= 6 && noise <= -16) {
+					groundHeight = noise - bumpsNoise + 5;
+				}
+
 				if (detailNoise >= 2) {
 					double d = random.nextDouble();
 
@@ -64,20 +85,17 @@ public class PlainsChunkGen extends ChunkGen{
 							top = Material.RED_SANDSTONE;
 						}
 						else {
-							top = Material.RED_SAND;
+							top = Material.SAND;
 						}
 						if (random.nextDouble() >= 0.95) {
-							chunkData.setRegion(x, baseHeight + groundHeight + 1, z, x + 1, baseHeight + groundHeight + random.nextInt(5) + 4, z + 1, top);
+							chunkData.setRegion(x, baseHeight + groundHeight + 1, z, x + 1, baseHeight + groundHeight + 1 + random.nextInt(5) + 4, z + 1, top);
 						}
 					}
 				}
-
-
 				chunkData.setRegion(x, baseHeight - 8 - Math.abs(groundHeight), z, x + 1, baseHeight + groundHeight + 1, z + 1, Material.SANDSTONE);
-				chunkData.setBlock(x, baseHeight + noise, z, top);
+				chunkData.setBlock(x, baseHeight + groundHeight + 1, z, top);
 			}
 		}
-
 		return chunkData;
 	}
 }

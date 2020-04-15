@@ -17,21 +17,23 @@ public class DesertChunkGen extends ChunkGen{
 
 	@Override
 	public ChunkData generate(ChunkData chunkData) {
+		int baseHeight = ChunkGen.getBaseHeight();
+		
 		Random random = createRandom(chunkX, chunkZ);
-		chunkData.setRegion(1, this.baseHeight - 4, 1, 16, this.baseHeight + 1, 16, Material.SAND);
+		chunkData.setRegion(1, baseHeight - 4, 1, 16, baseHeight + 1, 16, Material.SAND);
 		for (int i = 0; i < 8; i++) {
 			int x = random.nextInt(13) + 2;
 			int z = random.nextInt(13) + 2;
 			int size = random.nextInt(2) + 1;
 			int type = random.nextInt(2);
-			chunkData.setRegion(x - size, this.baseHeight + 1, z - size, x + size + 1, this.baseHeight + 2, z + size + 1, Material.SAND);
+			chunkData.setRegion(x - size, baseHeight + 1, z - size, x + size + 1, baseHeight + 2, z + size + 1, Material.SAND);
 			switch (type) {
 			case 0:
-				chunkData.setBlock(x, this.baseHeight + 2, z, Material.CACTUS);
-				chunkData.setBlock(x, this.baseHeight + 3, z, Material.CACTUS);
+				chunkData.setBlock(x, baseHeight + 2, z, Material.CACTUS);
+				chunkData.setBlock(x, baseHeight + 3, z, Material.CACTUS);
 				break;
 			case 1:
-				chunkData.setBlock(x, this.baseHeight + 2, z, Material.DEAD_BUSH);
+				chunkData.setBlock(x, baseHeight + 2, z, Material.DEAD_BUSH);
 				break;
 			} 
 		} 

@@ -7,7 +7,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 
 import org.bukkit.generator.BlockPopulator;
-import org.bukkit.util.noise.SimplexOctaveGenerator;
 
 
 public class MazePopulator extends BlockPopulator {
@@ -17,13 +16,13 @@ public class MazePopulator extends BlockPopulator {
 	private boolean debugEnabled = false;
 
 	//height of ground
-	private int baseHeight = ChunkGen.getBaseHeight();
+	//private int baseHeight = ChunkGen.getBaseHeight();
 
 	//height of normal walls
-	private int wallHeight = ChunkGen.getWallHeight();
+	//private int wallHeight = ChunkGen.getWallHeight();
 
 	//main maze material
-	private Material baseMaterial = ChunkGen.getBaseMaterial();
+	//private Material baseMaterial = ChunkGen.getBaseMaterial();
 
 	//toggle highways
 	boolean highwaysEnabled = false;
@@ -32,30 +31,25 @@ public class MazePopulator extends BlockPopulator {
 	private int spawnSize = ChunkGen.getSpawnSize();
 	
 	//used to store World reference
-	private World world;
+	//private World world;
 
 	public MazePopulator(int baseHeight, int wallHeight, Material baseMaterial, World world) {
-		this.baseHeight = baseHeight;
+		/*this.baseHeight = baseHeight;
 		this.wallHeight = wallHeight;
 		this.baseMaterial = baseMaterial;
-		this.world = world;
+		this.world = world;*/
 	}
 
 	@Override
 	public void populate(World world, Random random, Chunk chunk) {
-
-		//prepare chunkNoise for use in this chunk -> store it in variable to only have one call to SimplexOctaveGenerator to save performance
-		double chunkNoise = NoiseGen.noise(chunk.getX(), chunk.getZ(), world);
-
-		double chunkLargeNoise = NoiseGen.largeNoise(chunk.getX(), chunk.getZ(), world);
 		
 		//use chunkNoise as the seed for random generation in this chunk
-		random = new Random((long) (chunkNoise * 2147483647D));
+		//random = new Random((long) (chunkNoise * 2147483647D));
 
 		world.getBlockAt(chunk.getBlock(8, 255, 8).getLocation()).setType(Material.GLOWSTONE);
 		
 		//store random chunk generator in cg
-		ChunkGen cg = GeneratorChooser.getChunkGen(chunk.getX(), chunk.getZ(), highwaysEnabled, spawnSize, chunkNoise, chunkLargeNoise, world);
+		ChunkGen cg = GeneratorChooser.getChunkGen(chunk.getX(), chunk.getZ(), highwaysEnabled, spawnSize, world);
 
 		//populate the chunk
 		cg.populate(chunk);
