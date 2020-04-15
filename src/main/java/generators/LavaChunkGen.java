@@ -9,7 +9,7 @@ import core.ChunkType;
 
 public class LavaChunkGen extends ChunkGen{
 	public LavaChunkGen(World world, int chunkX, int chunkZ) {
-		super("Lava Floor", ChunkType.OBSTACLE, false, 1, chunkX, chunkZ, world);
+		super("Lava", ChunkType.OBSTACLE, false, 1, chunkX, chunkZ, world);
 	}
 	
 	@Override

@@ -17,7 +17,6 @@ public class DesertChunkGen extends ChunkGen{
 
 	@Override
 	public ChunkData generate(ChunkData chunkData) {
-		int baseHeight = ChunkGen.getBaseHeight();
 		
 		Random random = createRandom(chunkX, chunkZ);
 		chunkData.setRegion(1, baseHeight - 4, 1, 16, baseHeight + 1, 16, Material.SAND);
