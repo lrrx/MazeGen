@@ -26,10 +26,8 @@ public class PlainsChunkGen extends ChunkGen{
 
 		//generate landscape
 
-		//replace 
 		SimplexOctaveGenerator cracksGenerator = new SimplexOctaveGenerator(new Random(world.getSeed()), 4);
 		cracksGenerator.setScale(0.001D);
-
 
 		SimplexOctaveGenerator bumpsGenerator = new SimplexOctaveGenerator(new Random(world.getSeed()), 6);
 		bumpsGenerator.setScale(0.03D);

@@ -162,27 +162,27 @@ public class CustomChunkGenerator extends ChunkGenerator {
 				double chunkNoise = NoiseGen.noise(chunkX * 16 + x, chunkZ * 16 + z, world);
 				double chunkLargeNoise = NoiseGen.largeNoise(chunkX * 16 + x, chunkZ * 16 + z, world);
 				m = Material.BEDROCK;
-				if (GeneratorChooser.isPlainsChunk(chunkX * 16 + x, chunkZ * 16 + x, chunkNoise, chunkLargeNoise, world)) {
+				if (GeneratorChooser.isPlainsChunk(chunkX * 16 + x, chunkZ * 16 + z, world)) {
 					m = Material.GRANITE;
 				}
-				else if (GeneratorChooser.isMazeChunk(chunkX * 16 + x, chunkZ * 16 + z, chunkNoise, world)) {
-					m = Material.COAL_BLOCK;
-				}
-				else if (GeneratorChooser.isInnerForest(chunkX * 16 + x, chunkZ * 16 + z, chunkNoise, world)) {
-					m = Material.COARSE_DIRT;
-				}
-				else if (GeneratorChooser.isForest(chunkX * 16 + x, chunkZ * 16 + z, chunkNoise, world)) {
+				else if (GeneratorChooser.isForest(chunkX * 16 + x, chunkZ * 16 + z, world)) {
 					m = Material.GRASS_BLOCK;
+				}
+				else if (GeneratorChooser.isMazeChunk(chunkX * 16 + x, chunkZ * 16 + z, world)) {
+					m = Material.COAL_BLOCK;
 				}
 
 				chunkData.setBlock(x, 100, z, m);
 				for(int y = 0; y <= 255; y++) {
 					biomeGrid.setBiome(chunkX * 16 + x, y, chunkZ * 16 + z, Biome.SWAMP);
 				}
+				if ((chunkX * 16 + x) % 64 == 0 && (chunkZ * 16 + z) % 64 == 0) {
+					chunkData.setBlock(x, 102, z, Material.GLASS);
+				}
 			}
 		}*/
 
-
+		
 		for(int x = 0; x <= 15; x++) {
 			for(int z = 0; z <= 15; z++) {
 				for(int y = 0; y <= 255; y++) {
@@ -240,7 +240,7 @@ public class CustomChunkGenerator extends ChunkGenerator {
 		//make sure the void is always closed off
 		chunkData.setRegion(0, 0, 0, 15 + 1, 8, 15 + 1, baseMaterial);
 
-		//finally, return the generated chunkData
+		//finally, return the generated chunkData*/
 		return chunkData;
 	}
 

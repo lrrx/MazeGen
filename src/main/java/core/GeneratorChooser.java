@@ -8,33 +8,25 @@ public class GeneratorChooser {
 	static boolean debugEnabled = false;
 
 	public static boolean isForest(int chunkX, int chunkZ, World world) {
-		double chunkNoise = NoiseGen.noise(chunkX * 16, chunkZ * 16, world);
 		
-		if(chunkNoise > 0.6) {
-			return true;
+		int forestsOffset = 16384;
+		
+		for(int i = 0; i < 4; i++) {
+			double chunkLargeNoise = NoiseGen.largeNoise(chunkX * 16 + i * forestsOffset, chunkZ * 16 + i * forestsOffset, world);
+			
+			if(chunkLargeNoise < -0.75) {
+				return true;
+			}
 		}
-		else {
-			return false;
-		}
+		return false;
 	}
 
 	public static boolean isPlainsChunk(int chunkX, int chunkZ, World world) {
-		//return true;
+		
 		double chunkNoise = NoiseGen.noise(chunkX * 16, chunkZ * 16, world);
 		double chunkLargeNoise = NoiseGen.largeNoise(chunkX * 16, chunkZ * 16, world);
 		
 		if(chunkNoise > -0.6 && chunkLargeNoise > 0.5) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
-
-	public static boolean isInnerForest(int chunkX, int chunkZ, World world) {
-		double chunkNoise = NoiseGen.noise(chunkX * 16, chunkZ * 16, world);
-		
-		if(chunkNoise > 0.7) {
 			return true;
 		}
 		else {
@@ -59,8 +51,7 @@ public class GeneratorChooser {
 	public static boolean isForestNear(int chunkX, int chunkZ, World world) {
 		for(int x = -1; x <= 1; x++) {
 			for(int z = -1; z <= 1; z++) {
-				if (isForest(chunkX, chunkZ, world)
-						|| isInnerForest(chunkX, chunkZ, world)) {
+				if (isForest(chunkX, chunkZ, world)) {
 					if (debugEnabled) {
 						System.out.println("Forest is Near! chunkX: " + chunkX + " chunkZ: " + chunkZ + " x: " + x + " z: " + z);
 					}
@@ -93,15 +84,13 @@ public class GeneratorChooser {
 			cg = new PlainsChunkGen(world, chunkX, chunkZ);
 		}
 		//use chunkNoise to decide what type of room (Maze/Forest) to generate
-		else if(isMazeChunk(chunkX, chunkZ, world)) {
-			cg = new MazeChunkGen(world, chunkX, chunkZ);
-		}
-		else if (isInnerForest(chunkX, chunkZ, world)) {
-			cg = new InnerForestChunkGen(world, chunkX, chunkZ);
-		}
 		else if (isForest(chunkX, chunkZ, world)) {
 			cg = new ForestChunkGen(world, chunkX, chunkZ);
 		}
+		else if(isMazeChunk(chunkX, chunkZ, world)) {
+			cg = new MazeChunkGen(world, chunkX, chunkZ);
+		}
+		
 		//only generate LavaChunk if there is no forest close to it
 		else if(1 <= n && n <= 30) {
 			if (!isForestNear(chunkX, chunkZ, world)) {

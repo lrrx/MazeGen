@@ -5,13 +5,30 @@ import java.util.Random;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
 import org.bukkit.generator.ChunkGenerator.ChunkData;
 
 public class ChunkGen {
+	protected Material[] flowerTypes = {
+			Material.ALLIUM,
+			Material.AZURE_BLUET,
+			Material.BLUE_ORCHID,
+			Material.CORNFLOWER,
+			Material.DANDELION,
+			Material.LILAC,
+			Material.LILY_OF_THE_VALLEY,
+			Material.ORANGE_TULIP,
+			Material.OXEYE_DAISY,
+			Material.PEONY,
+			Material.PINK_TULIP,
+			Material.POPPY
+	};
+	
 	private String name;
 	private ChunkType type;
 	private boolean isMultiChunk;
 	private int size; //1 unless the generator covers multiple chunks
+	private static Biome biome;
 	
 	public final String getName() {
 		return name;
@@ -52,6 +69,10 @@ public class ChunkGen {
 	
 	public static int getSpawnSize() {
 		return spawnSize;
+	}
+	
+	public static Biome getChunkBiome() {
+		return biome;
 	}
 	
 	public ChunkGen(String name, ChunkType type, boolean isMultiChunk, int size, int chunkX, int chunkZ, World world) {

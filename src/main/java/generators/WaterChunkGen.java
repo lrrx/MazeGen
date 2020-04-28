@@ -20,12 +20,13 @@ public class WaterChunkGen extends ChunkGen{
 		chunkData.setRegion(1, baseHeight, 1, 16, baseHeight + 1, 16, Material.AIR);
 		chunkData.setRegion(1, baseHeight - 8, 1, 16, baseHeight - 7, 16, Material.SAND);
 		chunkData.setRegion(1, baseHeight - 7, 1, 16, baseHeight, 16, Material.WATER);
-		for (int i3 = 0; i3 < random.nextInt(5) + 4; i3++) {
+		for (int i = 0; i < random.nextInt(5) + 4; i++) {
 			int x = random.nextInt(13) + 2;
 			int z = random.nextInt(13) + 2;
-			for (int y = baseHeight - 7; y < baseHeight - random.nextInt(5) + 1; y++)
-				chunkData.setBlock(x, y, z, Material.KELP_PLANT); 
+			chunkData.setRegion(x, baseHeight - 7, z, x + 1, baseHeight - random.nextInt(5) +  - 1, z + 1, Material.KELP_PLANT); 
+				
 		} 
+		/*
 		for (int i2 = 0; i2 < random.nextInt(3) + 1; i2++) {
 			int x = random.nextInt(13) + 2;
 			int z = random.nextInt(13) + 2;
@@ -52,7 +53,7 @@ public class WaterChunkGen extends ChunkGen{
 				if (x < 14 && x > 1 && z < 14 && z > 1)
 					chunkData.setRegion(x - 1, baseHeight - 1, z - 1, x + 1, baseHeight, z + 1, Material.ICE); 
 			} 
-		} 
+		}*/
 		return chunkData;
 	}
 }
