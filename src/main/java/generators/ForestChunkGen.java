@@ -43,27 +43,6 @@ public class ForestChunkGen extends ChunkGen{
 		return isForest;
 	}
 
-	/*public double forestEdgeSmoothingFunction(double x) {
-		double startPoint = -0.7;
-
-		double endPoint = -0.85;
-
-		double slope = 1 / (Math.abs(Math.abs(startPoint) - Math.abs(endPoint)));
-		//
-		if(x > startPoint) {
-			System.out.println("A: " + x);
-			return Math.abs(x) * 10;
-		}
-		else if(endPoint <= x && x <= startPoint) {
-			System.out.println("B: " + x);
-			return slope * x + (Math.abs(startPoint) * slope) + 1;
-		}
-		else {
-			System.out.println("C: " + x);
-			return 1.0D;
-		}
-	}*/
-
 	@Override
 	public ChunkData generate(ChunkData chunkData) {
 		Random random = this.createRandom(chunkX, chunkZ);
@@ -204,7 +183,7 @@ public class ForestChunkGen extends ChunkGen{
 					}
 				}
 
-				//demonstrate bilinear interpolation on forests edges
+				//demonstrate bilinear interpolation on forests edges for debugging etc
 				/*if (isForestEdge == true) {
 					chunkData.setBlock(x,  112 + (int)(forestEdgeBilerpValue * 16), z, Material.BEDROCK);
 				}*/
@@ -220,7 +199,7 @@ public class ForestChunkGen extends ChunkGen{
 					}
 				}
 
-				//generate random debris
+				//generate random debris underground
 				if (random.nextDouble() <= 0.8) {
 					Material b = Material.COBBLESTONE;
 
