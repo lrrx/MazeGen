@@ -7,12 +7,14 @@ import generators.*;
 public class GeneratorChooser {
 	static boolean debugEnabled = false;
 
+	private static int chunkCenterOffset = 7;
+	
 	public static boolean isForest(int chunkX, int chunkZ, World world) {
 		
 		int forestsOffset = 16384;
 		
 		for(int i = 0; i < 4; i++) {
-			double chunkLargeNoise = NoiseGen.largeNoise(chunkX * 16 + i * forestsOffset, chunkZ * 16 + i * forestsOffset, world);
+			double chunkLargeNoise = NoiseGen.largeNoise(chunkCenterOffset + chunkX * 16 + i * forestsOffset, chunkCenterOffset +  chunkZ * 16 + i * forestsOffset, world);
 			
 			if(chunkLargeNoise < -0.75) {
 				return true;
@@ -23,8 +25,8 @@ public class GeneratorChooser {
 
 	public static boolean isPlainsChunk(int chunkX, int chunkZ, World world) {
 		
-		double chunkNoise = NoiseGen.noise(chunkX * 16, chunkZ * 16, world);
-		double chunkLargeNoise = NoiseGen.largeNoise(chunkX * 16, chunkZ * 16, world);
+		double chunkNoise = NoiseGen.noise(chunkCenterOffset + chunkX * 16, chunkCenterOffset + chunkZ * 16, world);
+		double chunkLargeNoise = NoiseGen.largeNoise(chunkCenterOffset + chunkX * 16, chunkCenterOffset + chunkZ * 16, world);
 		
 		if(chunkNoise > -0.6 && chunkLargeNoise > 0.5) {
 			return true;
@@ -35,7 +37,7 @@ public class GeneratorChooser {
 	}
 
 	public static boolean isMazeChunk(int chunkX, int chunkZ, World world) {
-		double chunkNoise = NoiseGen.noise(chunkX * 16, chunkZ * 16, world);
+		double chunkNoise = NoiseGen.noise(chunkCenterOffset + chunkX * 16, chunkCenterOffset + chunkZ * 16, world);
 		
 		if (0.4 < chunkNoise && chunkNoise <= 0.6) {
 			return true;
@@ -51,7 +53,7 @@ public class GeneratorChooser {
 	public static boolean isForestNear(int chunkX, int chunkZ, World world) {
 		for(int x = -1; x <= 1; x++) {
 			for(int z = -1; z <= 1; z++) {
-				if (isForest(chunkX, chunkZ, world)) {
+				if (isForest(chunkCenterOffset + chunkX, chunkCenterOffset + chunkZ, world)) {
 					if (debugEnabled) {
 						System.out.println("Forest is Near! chunkX: " + chunkX + " chunkZ: " + chunkZ + " x: " + x + " z: " + z);
 					}

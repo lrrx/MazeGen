@@ -86,6 +86,14 @@ public class ChunkGen {
 		this.world = world;
 	}
 	
+	protected static double lerp(double y0, double y1, double x) {
+		return y0 + x * (y1 - y0);
+	}
+	
+	protected static double bilerp(double y0, double y1, double y2, double y3, double x, double z) {
+		return lerp(lerp(y0, y1, x), lerp(y2, y3, x), z);
+	}
+	
 	public Random createRandom(int chunkX, int chunkZ) {
 		return new Random((long) (NoiseGen.noise(chunkX, chunkZ, world) * 2147483647D));
 	}
