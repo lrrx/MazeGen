@@ -9,6 +9,7 @@ import org.bukkit.util.noise.SimplexOctaveGenerator;
 
 import core.ChunkGen;
 import core.ChunkType;
+import core.GeneratorChooser;
 import core.NoiseGen;
 
 public class PlainsChunkGen extends ChunkGen{
@@ -16,7 +17,33 @@ public class PlainsChunkGen extends ChunkGen{
 		super("Plains", ChunkType.NEUTRAL, false, 1, chunkX, chunkZ, world);
 	}
 
-	public double terrainTransformFunction(double x) {
+	private static int[][] isPlainsEdge(int chunkX, int chunkZ, World world) {
+		int[][] isPlains = {
+				{1, 1},
+				{1, 1}
+		};
+
+		for (int x = 0; x <= 1; x++) {
+			for (int z = 0; z <= 1; z++) {
+				int xOffset = -1 + 2 * x;
+				int zOffset = -1 + 2 * z;
+
+				if(!GeneratorChooser.isPlainsChunk(chunkX + xOffset, chunkZ + zOffset, world)) {
+					isPlains[x][z] = 0;
+				}
+				else if (!GeneratorChooser.isPlainsChunk(chunkX + xOffset, chunkZ, world)) {
+					isPlains[x][z] = 0;
+				}
+				else if(!GeneratorChooser.isPlainsChunk(chunkX, chunkZ + zOffset, world)) {
+					isPlains[x][z] = 0;
+				}
+			}
+		}
+
+		return isPlains;
+	}
+	
+	private double terrainTransformFunction(double x) {
 		return ((8096 * Math.pow((x - 1) , 8) - 32 ));
 	}
 
@@ -24,7 +51,17 @@ public class PlainsChunkGen extends ChunkGen{
 	public ChunkData generate(ChunkData chunkData) {
 		Random random = this.createRandom(chunkX, chunkZ);
 
-		//generate landscape
+		int isPlains[][] = isPlainsEdge(chunkX, chunkZ, world);
+
+		int isPlainsSum = 0;
+
+		for (int xOffset = 0; xOffset <= 1; xOffset++) {
+			for (int zOffset = 0; zOffset <= 1; zOffset++) {
+				isPlainsSum += isPlains[xOffset][zOffset];
+			}
+		}
+
+		boolean isPlainsEdge = (isPlainsSum != 4);
 
 		SimplexOctaveGenerator cracksGenerator = new SimplexOctaveGenerator(new Random(world.getSeed()), 4);
 		cracksGenerator.setScale(0.001D);
@@ -66,6 +103,19 @@ public class PlainsChunkGen extends ChunkGen{
 					groundHeight = noise - bumpsNoise + 5;
 				}
 
+				double plainsEdgeBilerpValue = bilerp(
+						(double)isPlains[0][0],
+						(double)isPlains[0][1],
+						(double)isPlains[1][0],
+						(double)isPlains[1][1],
+						(double)z / 16,
+						(double)x / 16
+				);
+				
+				if (isPlainsEdge) {
+					groundHeight = (int) Math.round(groundHeight * plainsEdgeBilerpValue);
+				}
+				
 				if (detailNoise >= 2) {
 					double d = random.nextDouble();
 
@@ -90,8 +140,9 @@ public class PlainsChunkGen extends ChunkGen{
 						}
 					}
 				}
-				chunkData.setRegion(x, baseHeight - 8 - Math.abs(groundHeight), z, x + 1, baseHeight + groundHeight + 1, z + 1, Material.SANDSTONE);
-				chunkData.setBlock(x, baseHeight + groundHeight + 1, z, top);
+				
+				chunkData.setRegion(x, baseHeight - 8 - Math.abs(groundHeight), z, x + 1, baseHeight + groundHeight, z + 1, Material.SANDSTONE);
+				chunkData.setBlock(x, baseHeight + groundHeight, z, top);
 			}
 		}
 		return chunkData;

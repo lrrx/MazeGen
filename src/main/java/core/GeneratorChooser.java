@@ -13,7 +13,7 @@ public class GeneratorChooser {
 		
 		int forestsOffset = 16384;
 		
-		for(int i = 0; i < 4; i++) {
+		for(int i = 0; i < 4 ; i++) {
 			double chunkLargeNoise = NoiseGen.largeNoise(chunkCenterOffset + chunkX * 16 + i * forestsOffset, chunkCenterOffset +  chunkZ * 16 + i * forestsOffset, world);
 			
 			if(chunkLargeNoise < -0.75) {

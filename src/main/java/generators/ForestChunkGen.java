@@ -17,7 +17,7 @@ public class ForestChunkGen extends ChunkGen{
 		super("Inner Forest", ChunkType.FOREST, false, 1, chunkX, chunkZ, world);
 	}
 
-	private static int[][] isForestConnected(int chunkX, int chunkZ, World world) {
+	private static int[][] isForestEdge(int chunkX, int chunkZ, World world) {
 		int[][] isForest = {
 				{1, 1},
 				{1, 1}
@@ -50,7 +50,7 @@ public class ForestChunkGen extends ChunkGen{
 		//clear ground for landscape
 		chunkData.setRegion(0, baseHeight - 8, 0, 16, baseHeight + 1, 16, Material.AIR);
 
-		int isForest[][] = isForestConnected(chunkX, chunkZ, world);
+		int isForest[][] = isForestEdge(chunkX, chunkZ, world);
 
 		int isForestSum = 0;
 
@@ -101,18 +101,21 @@ public class ForestChunkGen extends ChunkGen{
 				int groundHeight = baseHeight + noise;
 
 				//cache bilinear interpolation with edges value for x-z Point
-				double forestEdgeBilerpValue = bilerp(
-						(double)isForest[0][0],
-						(double)isForest[0][1],
-						(double)isForest[1][0],
-						(double)isForest[1][1],
-						(double)z / 16,
-						(double)x / 16
-				);
 				
+				double forestEdgeBilerpValue = 1;
+
 				//interpolate ground with forest edges
 				if (isForestEdge) {
-					groundHeight = baseHeight + (int)(noise * forestEdgeBilerpValue);
+					forestEdgeBilerpValue = bilerp(
+							(double)isForest[0][0],
+							(double)isForest[0][1],
+							(double)isForest[1][0],
+							(double)isForest[1][1],
+							(double)z / 16,
+							(double)x / 16
+					);
+					
+					groundHeight = baseHeight + (int) Math.round(noise * forestEdgeBilerpValue);
 				}
 
 				//add random decal like stones and patches of dirt
@@ -146,7 +149,7 @@ public class ForestChunkGen extends ChunkGen{
 				//fill ground
 				chunkData.setRegion(x, baseHeight - 32 - Math.abs(noise), z, x + 1, groundHeight, z + 1, Material.DIRT);
 				
-				//set top decal block
+				//set top decal block(int)(leavesNoise * forestEdgeBilerpValue)
 				chunkData.setBlock(x, groundHeight, z, top);
 
 				//generate grass and flowers based on noise
@@ -179,7 +182,7 @@ public class ForestChunkGen extends ChunkGen{
 
 					//create trunks
 					if(random.nextDouble() <= 0.01) {
-						chunkData.setRegion(x, groundHeight, z, x + 1, leavesMidPoint + leavesNoise - 2, z + 1, Material.OAK_LOG);
+						chunkData.setRegion(x, groundHeight, z, x + 1, groundHeight + (int)(((leavesBaseHeight + leavesNoiseBig) * forestEdgeBilerpValue)) - 2, z + 1, Material.OAK_LOG);
 					}
 				}
 

@@ -46,7 +46,7 @@ public class MazePopulator extends BlockPopulator {
 		//use chunkNoise as the seed for random generation in this chunk
 		//random = new Random((long) (chunkNoise * 2147483647D));
 
-		world.getBlockAt(chunk.getBlock(8, 255, 8).getLocation()).setType(Material.GLOWSTONE);
+		//world.getBlockAt(chunk.getBlock(8, 255, 8).getLocation()).setType(Material.GLOWSTONE);
 		
 		//store random chunk generator in cg
 		ChunkGen cg = GeneratorChooser.getChunkGen(chunk.getX(), chunk.getZ(), highwaysEnabled, spawnSize, world);
