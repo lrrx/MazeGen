@@ -28,3 +28,6 @@ worlds:
   ![Screenshot 1](/assets/Maze-Screenshot-1.jpg)
   ![Screenshot 2](/assets/Maze-Screenshot-2.jpg)
   ![Screenshot 3](/assets/Maze-Screenshot-3.jpg)
+  ![Screenshot 4](/assets/Maze-Screenshot-4.jpg)
+  ![Screenshot 5](/assets/Maze-Screenshot-5.jpg)
+  ![Screenshot 6](/assets/Maze-Screenshot-6.jpg)
