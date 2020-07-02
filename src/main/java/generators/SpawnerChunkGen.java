@@ -39,7 +39,7 @@ public class SpawnerChunkGen extends ChunkGen{
 			EntityType.PARROT,
 			EntityType.PHANTOM,
 			EntityType.PIG,
-			EntityType.PIG_ZOMBIE,
+			EntityType.ZOMBIFIED_PIGLIN,
 			EntityType.PILLAGER,
 			EntityType.POLAR_BEAR,
 			EntityType.RABBIT,
