@@ -2,8 +2,13 @@ package generators;
 
 import java.util.Random;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.Bisected;
+import org.bukkit.block.data.type.Leaves;
 import org.bukkit.generator.ChunkGenerator.ChunkData;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
 
@@ -62,7 +67,7 @@ public class ForestChunkGen extends ChunkGen{
 
 		boolean isForestEdge = (isForestSum != 4);
 
-		
+
 		//Initialize Noise Generators
 		SimplexOctaveGenerator rootsGenerator = new SimplexOctaveGenerator(new Random(world.getSeed()), 8);
 		rootsGenerator.setScale(0.01D);
@@ -79,9 +84,9 @@ public class ForestChunkGen extends ChunkGen{
 		SimplexOctaveGenerator leavesGeneratorBig = new SimplexOctaveGenerator(new Random(world.getSeed()), 8);
 		leavesGeneratorBig.setScale(0.02D);
 
-		for(int x = 0; x <= 16; x++) {
-			for(int z = 0; z <= 16; z++) {
-				
+		for(int x = 0; x <= 15; x++) {
+			for(int z = 0; z <= 15; z++) {
+
 				//Calculate Noise values for each x-z Point
 				double largeNoise = NoiseGen.largeNoise(chunkX * 16 + x, chunkZ * 16 + z, world);
 				int noise = (int) (generator.noise(chunkX * 16 + x, chunkZ * 16 + z, 0.2D, 0.4D) * 3);
@@ -89,7 +94,7 @@ public class ForestChunkGen extends ChunkGen{
 				int leavesNoise = (int) (leavesGenerator.noise(chunkX * 16 + x, chunkZ * 16 + z, 0.5D, 0.2D) * 4);
 				int leavesNoiseBig = (int) (leavesGeneratorBig.noise(chunkX * 16 + x, chunkZ * 16 + z, 0.5D, 0.5D, true) * 5);
 
-				boolean doTrunkGeneration = false;
+				boolean doTrunkGeneration = false; 
 
 				//enable trunk generation if leaves are thick enough
 				if (leavesNoiseBig >= 1) {
@@ -101,7 +106,7 @@ public class ForestChunkGen extends ChunkGen{
 				int groundHeight = baseHeight + noise;
 
 				//cache bilinear interpolation with edges value for x-z Point
-				
+
 				double forestEdgeBilerpValue = 1;
 
 				//interpolate ground with forest edges
@@ -113,8 +118,8 @@ public class ForestChunkGen extends ChunkGen{
 							(double)isForest[1][1],
 							(double)z / 16,
 							(double)x / 16
-					);
-					
+							);
+
 					groundHeight = baseHeight + (int) Math.round(noise * forestEdgeBilerpValue);
 				}
 
@@ -148,7 +153,7 @@ public class ForestChunkGen extends ChunkGen{
 
 				//fill ground
 				chunkData.setRegion(x, baseHeight - 32 - Math.abs(noise), z, x + 1, groundHeight, z + 1, Material.DIRT);
-				
+
 				//set top decal block(int)(leavesNoise * forestEdgeBilerpValue)
 				chunkData.setBlock(x, groundHeight, z, top);
 
@@ -162,6 +167,9 @@ public class ForestChunkGen extends ChunkGen{
 						deco = flowerTypes[random.nextInt(flowerTypes.length - 1)];
 					}
 					else if (0.05 <= n && n < 0.3) {
+
+						//Bisected bs = (Bisected)Material.TALL_GRASS.createBlockData();
+						//bs.getHalf(Bisected.Half.TOP);
 						deco = Material.TALL_GRASS;
 					}
 
@@ -178,7 +186,8 @@ public class ForestChunkGen extends ChunkGen{
 					int upperLeafEnd =  leavesMidPoint + (int)((leavesNoise + Math.abs(leavesNoiseBig) + random.nextInt(2)) * forestEdgeBilerpValue);
 
 					//create leaves
-					chunkData.setRegion(x, lowerLeafEnd, z, x + 1, upperLeafEnd, z + 1, Material.OAK_LEAVES);
+					//chunkData.setRegion(x, lowerLeafEnd, z, x + 1, upperLeafEnd, z + 1, Material.OAK_LEAVES);
+					//chunkData.setRegion(x, lowerLeafEnd, z, x + 1, upperLeafEnd, z + 1, Bukkit.createBlockData("minecraft:oak_leaves[persistent=true]"));
 
 					//create trunks
 					if(random.nextDouble() <= 0.01) {
@@ -227,5 +236,93 @@ public class ForestChunkGen extends ChunkGen{
 			}
 		}
 		return chunkData;
+	}
+
+	@Override
+	public void populate(Chunk chunk) {
+		Random random = this.createRandom(chunkX, chunkZ);
+		
+		int isForest[][] = isForestEdge(chunkX, chunkZ, world);
+
+		int isForestSum = 0;
+
+		for (int xOffset = 0; xOffset <= 1; xOffset++) {
+			for (int zOffset = 0; zOffset <= 1; zOffset++) {
+				isForestSum += isForest[xOffset][zOffset];
+			}
+		}
+
+		boolean isForestEdge = (isForestSum != 4);
+
+		SimplexOctaveGenerator generator = new SimplexOctaveGenerator(new Random(world.getSeed()), 8);
+		generator.setScale(0.025D);
+
+		SimplexOctaveGenerator detailGenerator = new SimplexOctaveGenerator(new Random(world.getSeed()), 8);
+		detailGenerator.setScale(0.3D);
+
+		SimplexOctaveGenerator leavesGenerator = new SimplexOctaveGenerator(new Random(world.getSeed()), 8);
+		leavesGenerator.setScale(0.08D);
+
+		SimplexOctaveGenerator leavesGeneratorBig = new SimplexOctaveGenerator(new Random(world.getSeed()), 8);
+		leavesGeneratorBig.setScale(0.02D);	
+		
+		for(int x = 0; x <= 15; x++) {
+			for(int z = 0; z <= 15; z++) {
+				
+				//Calculate Noise values for each x-z Point
+				double largeNoise = NoiseGen.largeNoise(chunkX * 16 + x, chunkZ * 16 + z, world);
+				int noise = (int) (generator.noise(chunkX * 16 + x, chunkZ * 16 + z, 0.2D, 0.4D) * 3);
+				int detailNoise = (int) (detailGenerator.noise(chunkX * 16 + x, chunkZ * 16 + z, 0.2D, 0.4D) * 3);
+				int leavesNoise = (int) (leavesGenerator.noise(chunkX * 16 + x, chunkZ * 16 + z, 0.5D, 0.2D) * 4);
+				int leavesNoiseBig = (int) (leavesGeneratorBig.noise(chunkX * 16 + x, chunkZ * 16 + z, 0.5D, 0.5D, true) * 5);
+
+				boolean doTrunkGeneration = false;
+
+				//enable trunk generation if leaves are thick enough
+				if (leavesNoiseBig >= 1) {
+					doTrunkGeneration = true;
+				}
+				//TODO: increase tree height to at least 16
+				int leavesBaseHeight = 8;
+
+				int groundHeight = baseHeight + noise;
+
+				//cache bilinear interpolation with edges value for x-z Point
+
+				double forestEdgeBilerpValue = 1;
+
+				//interpolate ground with forest edges
+				if (isForestEdge) {
+					forestEdgeBilerpValue = bilerp(
+							(double)isForest[0][0],
+							(double)isForest[0][1],
+							(double)isForest[1][0],
+							(double)isForest[1][1],
+							(double)z / 16,
+							(double)x / 16
+							);
+
+					groundHeight = baseHeight + (int) Math.round(noise * forestEdgeBilerpValue);
+				}
+
+				//generate leaves on a height and with a thickness that are both noise-based
+				int leavesMidPoint = groundHeight + leavesBaseHeight + leavesNoiseBig;
+
+				if (leavesNoise > 0) {
+
+					int lowerLeafEnd = leavesMidPoint - (int)(leavesNoise * forestEdgeBilerpValue) ;
+
+					int upperLeafEnd =  leavesMidPoint + (int)((leavesNoise + Math.abs(leavesNoiseBig) + random.nextInt(2)) * forestEdgeBilerpValue);
+					
+					for(int y = lowerLeafEnd; y < upperLeafEnd; y++) {
+						Block block = chunk.getBlock(x, y, z);
+						block.setType(Material.OAK_LEAVES, false);
+						Leaves leaf = (Leaves) block.getBlockData();
+				        leaf.setPersistent(true);
+				        block.setBlockData(leaf, false);
+					}
+				}
+			}
+		}
 	}
 }

@@ -1,4 +1,6 @@
 package core;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
 

@@ -6,6 +6,8 @@ import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.type.Leaves;
 import org.bukkit.generator.ChunkGenerator.ChunkData;
 
 public class ChunkGen {
@@ -94,11 +96,11 @@ public class ChunkGen {
 		return lerp(lerp(y0, y1, x), lerp(y2, y3, x), z);
 	}
 	
-	public Random createRandom(int chunkX, int chunkZ) {
+	protected Random createRandom(int chunkX, int chunkZ) {
 		return new Random((long) (NoiseGen.noise(chunkX, chunkZ, world) * 2147483647D));
 	}
 	
-	public void fillChunkRegionPopulate(int x1, int y1, int z1, int x2, int y2, int z2, Material material, Chunk chunk) {
+	protected void fillChunkRegionPopulate(int x1, int y1, int z1, int x2, int y2, int z2, Material material, Chunk chunk) {
 		for(int x = x1; x <= x2; x++) {
 			for(int y = y1; y <= y2; y++) {
 				for(int z = z1; z <= z2; z++) {
@@ -108,9 +110,14 @@ public class ChunkGen {
 		}
 	}
 
-	public void setChunkBlockPopulate(int x, int y, int z, Material material, Chunk chunk) {
+	protected void setChunkBlockPopulate(int x, int y, int z, Material material, Chunk chunk) {
 		world.getBlockAt(chunk.getBlock(x, y, z).getLocation()).setType(material);
 	}
+	
+	protected void createPersistentLeaf(int x, int y, int z, Chunk chunk) {
+		
+	}
+	
 	
 	public ChunkData generate(ChunkData chunkData) {
 		return chunkData;

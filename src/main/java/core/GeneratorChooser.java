@@ -20,7 +20,7 @@ public class GeneratorChooser {
 				return true;
 			}
 		}
-		return false;
+		return true;//false;
 	}
 
 	public static boolean isPlainsChunk(int chunkX, int chunkZ, World world) {
@@ -70,7 +70,7 @@ public class GeneratorChooser {
 		
 		ChunkGen cg = new EmptyChunkGen(world, chunkX, chunkZ);
 		//generate random integer for room generation choice
-		int n = Math.abs(((int) (chunkNoise * 2147483647D)) % 1500);
+		int n = Math.abs(((int) (chunkNoise * 2147483647D)) % 1600);
 
 		//System.out.println("___________________________n: " + n);
 
@@ -143,6 +143,9 @@ public class GeneratorChooser {
 		}
 		else if (1401 <= n && n <= 1430) {
 			cg = new SwampChunkGen(world, chunkX, chunkZ);
+		}
+		else if (1501 <= n && n <= 1530) {
+			cg = new FarmChunkGen(world, chunkX, chunkZ);
 		}
 		else {
 			cg = new EmptyChunkGen(world, chunkX, chunkZ);
