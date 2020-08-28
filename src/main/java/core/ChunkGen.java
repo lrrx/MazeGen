@@ -53,7 +53,7 @@ public class ChunkGen {
 	protected static int baseHeight = 96;
 	protected static int wallHeight = 16;
 	protected static Material baseMaterial = Material.BEDROCK;
-	protected static int spawnSize = 2;
+	protected static int spawnSize = 3;
 	
 	public static int getBaseHeight() {
 		return baseHeight;

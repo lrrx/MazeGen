@@ -70,7 +70,7 @@ public class GeneratorChooser {
 		
 		ChunkGen cg = new EmptyChunkGen(world, chunkX, chunkZ);
 		//generate random integer for room generation choice
-		int n = Math.abs(((int) (chunkNoise * 2147483647D)) % 1400);
+		int n = Math.abs(((int) (chunkNoise * 2147483647D)) % 1500);
 
 		//System.out.println("___________________________n: " + n);
 
@@ -80,7 +80,7 @@ public class GeneratorChooser {
 		}
 		//generate empty rooms near spawn
 		else if(Math.abs(chunkX) <= spawnSize && Math.abs(chunkZ) <= spawnSize) {
-			cg = new EmptyChunkGen(world, chunkX, chunkZ);
+			cg = new SpawnChunkGen(world, chunkX, chunkZ);
 		}
 		else if (isPlainsChunk(chunkX, chunkZ, world)) {
 			cg = new PlainsChunkGen(world, chunkX, chunkZ);
@@ -140,6 +140,9 @@ public class GeneratorChooser {
 		}
 		else if (1301 <= n && n <= 1330) {
 			cg = new DesertChunkGen(world, chunkX, chunkZ);
+		}
+		else if (1401 <= n && n <= 1430) {
+			cg = new SwampChunkGen(world, chunkX, chunkZ);
 		}
 		else {
 			cg = new EmptyChunkGen(world, chunkX, chunkZ);

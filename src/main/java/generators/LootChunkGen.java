@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -23,13 +24,18 @@ public class LootChunkGen extends ChunkGen{
 
 	@Override
 	public ChunkData generate(ChunkData chunkData) {
-		chunkData.setRegion(4, baseHeight + 1, 4, 13, baseHeight + 2, 13, Material.STONE_BRICKS);
-		chunkData.setRegion(7, baseHeight + 1, 7, 10, baseHeight + 2, 10, Material.CHISELED_STONE_BRICKS);
-		chunkData.setRegion(6, baseHeight + 2, 6, 11, baseHeight + 6, 11, Material.STONE_BRICKS);
-		chunkData.setRegion(7, baseHeight + 2, 7, 10, baseHeight + 5, 10, Material.AIR);
-		chunkData.setRegion(8, baseHeight + 2, 6, 9, baseHeight + 4, 7, Material.AIR);
-		chunkData.setRegion(10, baseHeight + 2, 8, 11, baseHeight + 4, 9, Material.AIR);
-		chunkData.setRegion(8, baseHeight + 2, 10, 9, baseHeight + 4, 11, Material.AIR);
+		Random random = this.createRandom(chunkX, chunkZ);
+		
+		int posX = 4 - random.nextInt(8);
+		int posZ = 4 - random.nextInt(8);
+		
+		chunkData.setRegion(4 + posX, baseHeight + 1, 4 + posZ, 13 + posX, baseHeight + 2, 13 + posZ, Material.STONE_BRICKS);
+		chunkData.setRegion(7 + posX, baseHeight + 1, 7 + posZ, 10 + posX, baseHeight + 2, 10 + posZ, Material.CHISELED_STONE_BRICKS);
+		chunkData.setRegion(6 + posX, baseHeight + 2, 6 + posZ, 11 + posX, baseHeight + 6, 11 + posZ, Material.STONE_BRICKS);
+		chunkData.setRegion(7 + posX, baseHeight + 2, 7 + posZ, 10 + posX, baseHeight + 5, 10 + posZ, Material.AIR);
+		chunkData.setRegion(8 + posX, baseHeight + 2, 6 + posZ, 9 + posX, baseHeight + 4, 7 + posZ, Material.AIR);
+		chunkData.setRegion(10 + posX, baseHeight + 2, 8 + posZ, 11 + posX, baseHeight + 4, 9 + posZ, Material.AIR);
+		chunkData.setRegion(8 + posX, baseHeight + 2, 10 + posZ, 9 + posX, baseHeight + 4, 11 + posZ, Material.AIR);
 		return chunkData;
 	}
 
@@ -37,6 +43,10 @@ public class LootChunkGen extends ChunkGen{
 	public void populate(Chunk chunk) {
 		//System.out.println("Generating LootRoom");
 		Random random = this.createRandom(chunkX, chunkZ);
+		
+		int posX = 4 - random.nextInt(8);
+		int posZ = 4 - random.nextInt(8);
+		
 		Map<Material, Double> lootChanceMap = new HashMap<Material, Double>();
 
 		lootChanceMap.put(Material.BONE, 0.578);
@@ -72,8 +82,8 @@ public class LootChunkGen extends ChunkGen{
 		lootChanceMap.put(Material.ENCHANTED_GOLDEN_APPLE, 0.031);
 
 		Object[] lootMaterials = lootChanceMap.keySet().toArray();
-
-		Block b = world.getBlockAt(chunk.getBlock(8, baseHeight + 2, 8).getLocation());
+		
+		Block b = world.getBlockAt(chunk.getBlock(8 + posX, baseHeight + 2, 8 + posZ).getLocation());
 		b.setType(Material.CHEST);
 		Chest chest = (Chest) b.getState();
 		Inventory inventory = chest.getBlockInventory();

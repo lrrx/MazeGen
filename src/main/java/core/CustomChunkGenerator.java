@@ -135,7 +135,7 @@ public class CustomChunkGenerator extends ChunkGenerator {
 		return chunkData;
 	}
 
-	public ChunkData generatePylon (ChunkData chunkData, boolean doUnderground) {
+	public ChunkData generatePylon(ChunkData chunkData, boolean doUnderground) {
 		int width = 2;
 		int bottomZ = baseHeight;
 		int topZ = baseHeight + 64;
