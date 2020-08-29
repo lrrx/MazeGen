@@ -232,9 +232,11 @@ public class CustomChunkGenerator extends ChunkGenerator {
 		}
 
 		//generate pylons
-		if (((chunkX + 16) % 32 == 0 && chunkZ % 4 == 0)
-				|| ((chunkZ + 16) % 32 == 0 && chunkX % 4 == 0)) {
-			chunkData = generatePylon(chunkData, true);
+		if (!GeneratorChooser.isForest(chunkX, chunkZ, world)) {
+			if (((chunkX + 16) % 32 == 0 && chunkZ % 4 == 0)
+					|| ((chunkZ + 16) % 32 == 0 && chunkX % 4 == 0)) {
+				chunkData = generatePylon(chunkData, true);
+			}
 		}
 
 		//make sure the void is always closed off

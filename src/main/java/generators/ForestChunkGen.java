@@ -92,16 +92,6 @@ public class ForestChunkGen extends ChunkGen{
 				int noise = (int) (generator.noise(chunkX * 16 + x, chunkZ * 16 + z, 0.2D, 0.4D) * 3);
 				int detailNoise = (int) (detailGenerator.noise(chunkX * 16 + x, chunkZ * 16 + z, 0.2D, 0.4D) * 3);
 				int leavesNoise = (int) (leavesGenerator.noise(chunkX * 16 + x, chunkZ * 16 + z, 0.5D, 0.2D) * 4);
-				int leavesNoiseBig = (int) (leavesGeneratorBig.noise(chunkX * 16 + x, chunkZ * 16 + z, 0.5D, 0.5D, true) * 5);
-
-				boolean doTrunkGeneration = false; 
-
-				//enable trunk generation if leaves are thick enough
-				if (leavesNoiseBig >= 1) {
-					doTrunkGeneration = true;
-				}
-				//TODO: increase tree height to at least 16
-				int leavesBaseHeight = 8;
 
 				int groundHeight = baseHeight + noise;
 
@@ -174,25 +164,6 @@ public class ForestChunkGen extends ChunkGen{
 					}
 
 					chunkData.setBlock(x, groundHeight + 1, z, deco);
-				}
-
-				//generate leaves on a height and with a thickness that are both noise-based
-				int leavesMidPoint = groundHeight + leavesBaseHeight + leavesNoiseBig;
-
-				if (leavesNoise > 0) {
-
-					int lowerLeafEnd = leavesMidPoint - (int)(leavesNoise * forestEdgeBilerpValue) ;
-
-					int upperLeafEnd =  leavesMidPoint + (int)((leavesNoise + Math.abs(leavesNoiseBig) + random.nextInt(2)) * forestEdgeBilerpValue);
-
-					//create leaves
-					//chunkData.setRegion(x, lowerLeafEnd, z, x + 1, upperLeafEnd, z + 1, Material.OAK_LEAVES);
-					//chunkData.setRegion(x, lowerLeafEnd, z, x + 1, upperLeafEnd, z + 1, Bukkit.createBlockData("minecraft:oak_leaves[persistent=true]"));
-
-					//create trunks
-					if(random.nextDouble() <= 0.01) {
-						chunkData.setRegion(x, groundHeight, z, x + 1, groundHeight + (int)(((leavesBaseHeight + leavesNoiseBig) * forestEdgeBilerpValue)) - 2, z + 1, Material.OAK_LOG);
-					}
 				}
 
 				//demonstrate bilinear interpolation on forests edges for debugging etc
@@ -272,8 +243,8 @@ public class ForestChunkGen extends ChunkGen{
 				//Calculate Noise values for each x-z Point
 				double largeNoise = NoiseGen.largeNoise(chunkX * 16 + x, chunkZ * 16 + z, world);
 				int noise = (int) (generator.noise(chunkX * 16 + x, chunkZ * 16 + z, 0.2D, 0.4D) * 3);
-				int detailNoise = (int) (detailGenerator.noise(chunkX * 16 + x, chunkZ * 16 + z, 0.2D, 0.4D) * 3);
-				int leavesNoise = (int) (leavesGenerator.noise(chunkX * 16 + x, chunkZ * 16 + z, 0.5D, 0.2D) * 4);
+				int leavesNoise = (int) (leavesGenerator.noise(chunkX * 16 + x, chunkZ * 16 + z, 0.25D, 0.2D) * 4);
+				int leavesNoise2 = (int) (leavesGenerator.noise(chunkX * 16 + x + 4096, chunkZ * 16 + z + 4096, 0.3D, 0.25D) * 4);
 				int leavesNoiseBig = (int) (leavesGeneratorBig.noise(chunkX * 16 + x, chunkZ * 16 + z, 0.5D, 0.5D, true) * 5);
 
 				boolean doTrunkGeneration = false;
@@ -282,9 +253,10 @@ public class ForestChunkGen extends ChunkGen{
 				if (leavesNoiseBig >= 1) {
 					doTrunkGeneration = true;
 				}
-				//TODO: increase tree height to at least 16
-				int leavesBaseHeight = 8;
-
+				int leavesBaseHeight = 32;
+				
+				int leavesBaseHeight2 = 20;
+				
 				int groundHeight = baseHeight + noise;
 
 				//cache bilinear interpolation with edges value for x-z Point
@@ -306,11 +278,27 @@ public class ForestChunkGen extends ChunkGen{
 				}
 
 				//generate leaves on a height and with a thickness that are both noise-based
-				int leavesMidPoint = groundHeight + leavesBaseHeight + leavesNoiseBig;
+				int leavesMidPoint = groundHeight + (int)(leavesBaseHeight * forestEdgeBilerpValue) + leavesNoiseBig;
+				int leavesMidPoint2 = groundHeight + (int)(leavesBaseHeight2 * forestEdgeBilerpValue) + leavesNoiseBig;
 
-				if (leavesNoise > 0) {
+				if (leavesNoise2 > 0) {
 
-					int lowerLeafEnd = leavesMidPoint - (int)(leavesNoise * forestEdgeBilerpValue) ;
+					int lowerLeafEnd = leavesMidPoint2 - (int)(leavesNoise2 * forestEdgeBilerpValue) * 2 ;
+
+					int upperLeafEnd =  leavesMidPoint2 + (int)((leavesNoise2 + Math.abs(leavesNoiseBig) + random.nextInt(2)) * forestEdgeBilerpValue);
+					
+					for(int y = lowerLeafEnd; y < upperLeafEnd; y++) {
+						Block block = chunk.getBlock(x, y, z);
+						block.setType(Material.OAK_LEAVES, false);
+						Leaves leaf = (Leaves) block.getBlockData();
+				        leaf.setPersistent(true);
+				        block.setBlockData(leaf, false);
+					}
+				}
+				
+				if (leavesNoise > -1) {
+
+					int lowerLeafEnd = leavesMidPoint - (int)(leavesNoise * forestEdgeBilerpValue) * 2 ;
 
 					int upperLeafEnd =  leavesMidPoint + (int)((leavesNoise + Math.abs(leavesNoiseBig) + random.nextInt(2)) * forestEdgeBilerpValue);
 					
@@ -321,8 +309,28 @@ public class ForestChunkGen extends ChunkGen{
 				        leaf.setPersistent(true);
 				        block.setBlockData(leaf, false);
 					}
+
+					//create trunks
+					if(random.nextDouble() <= 0.01 && doTrunkGeneration) {
+						fillChunkRegionPopulate(x, groundHeight, z, x, upperLeafEnd - 2, z, Material.OAK_LOG, chunk);
+					}
 				}
 			}
+			if (((chunkX + 16) % 32 == 0 && chunkZ % 4 == 0)
+					|| ((chunkZ + 16) % 32 == 0 && chunkX % 4 == 0)) {
+				generatePylonPopulate(chunk, true);
+			}
 		}
+	}
+	public void generatePylonPopulate(Chunk chunk, boolean doUnderground) {
+		int width = 2;
+		int bottomZ = baseHeight;
+		int topZ = baseHeight + 64;
+		
+		if (doUnderground) {
+			bottomZ = 0;
+		}
+		
+		fillChunkRegionPopulate(8 - width, bottomZ, 8 - width, 9 + width, topZ + 1, 9 + width, baseMaterial, chunk);
 	}
 }

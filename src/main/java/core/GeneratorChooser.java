@@ -20,7 +20,7 @@ public class GeneratorChooser {
 				return true;
 			}
 		}
-		return true;//false;
+		return false;
 	}
 
 	public static boolean isPlainsChunk(int chunkX, int chunkZ, World world) {
