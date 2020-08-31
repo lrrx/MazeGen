@@ -162,13 +162,16 @@ public class CustomChunkGenerator extends ChunkGenerator {
 				double chunkNoise = NoiseGen.noise(chunkX * 16 + x, chunkZ * 16 + z, world);
 				double chunkLargeNoise = NoiseGen.largeNoise(chunkX * 16 + x, chunkZ * 16 + z, world);
 				m = Material.BEDROCK;
-				if (GeneratorChooser.isPlainsChunk(chunkX * 16 + x, chunkZ * 16 + z, world)) {
+				if (GeneratorChooser.isSpawnChunk(world, chunkX * 16 + x, chunkZ * 16 + z)) {
+					m = Material.COBBLESTONE;
+				}
+				else if (GeneratorChooser.isPlainsChunk(world, chunkX * 16 + x, chunkZ * 16 + z)) {
 					m = Material.GRANITE;
 				}
-				else if (GeneratorChooser.isForest(chunkX * 16 + x, chunkZ * 16 + z, world)) {
+				else if (GeneratorChooser.isForest(world, chunkX * 16 + x, chunkZ * 16 + z)) {
 					m = Material.GRASS_BLOCK;
 				}
-				else if (GeneratorChooser.isMazeChunk(chunkX * 16 + x, chunkZ * 16 + z, world)) {
+				else if (GeneratorChooser.isMazeChunk(world, chunkX * 16 + x, chunkZ * 16 + z)) {
 					m = Material.COAL_BLOCK;
 				}
 
@@ -190,7 +193,7 @@ public class CustomChunkGenerator extends ChunkGenerator {
 				}
 			}
 		}
-
+		
 		//prepare chunkNoise for use in this chunk -> store it in variable to only have one call to SimplexOctaveGenerator to save performance
 		double chunkNoise = NoiseGen.noise(chunkX * 16, chunkZ * 16, world);
 
@@ -199,11 +202,15 @@ public class CustomChunkGenerator extends ChunkGenerator {
 		//use chunkNoise as the seed for random generation in this chunk
 		random = new Random((long) (chunkNoise * 2147483647D));
 
-		boolean doGroundPregeneration = !(GeneratorChooser.isForest(chunkX, chunkZ, world) || GeneratorChooser.isPlainsChunk(chunkX, chunkZ, world));
+		boolean doGroundPregeneration = !(GeneratorChooser.isForest(world, chunkX, chunkZ) || GeneratorChooser.isPlainsChunk(world, chunkX, chunkZ));
 
-		boolean doWallPostgeneration = !(GeneratorChooser.isForest(chunkX, chunkZ, world)
-				|| GeneratorChooser.isPlainsChunk(chunkX, chunkZ, world))
-				&& !(Math.abs(chunkX) <= spawnSize && Math.abs(chunkZ) <= spawnSize);
+		if (!(GeneratorChooser.isSpawnChunk(world, chunkX, chunkZ))) {
+			doGroundPregeneration = true;
+		}
+		
+		boolean doWallPostgeneration = !(GeneratorChooser.isForest(world, chunkX, chunkZ)
+				|| GeneratorChooser.isPlainsChunk(world, chunkX, chunkZ))
+				&& !(GeneratorChooser.isSpawnChunk(world, chunkX, chunkZ));
 
 		//Generate Ground
 		if (doGroundPregeneration){
@@ -232,7 +239,7 @@ public class CustomChunkGenerator extends ChunkGenerator {
 		}
 
 		//generate pylons
-		if (!GeneratorChooser.isForest(chunkX, chunkZ, world)) {
+		if (!GeneratorChooser.isForest(world, chunkX, chunkZ)) {
 			if (((chunkX + 16) % 32 == 0 && chunkZ % 4 == 0)
 					|| ((chunkZ + 16) % 32 == 0 && chunkX % 4 == 0)) {
 				chunkData = generatePylon(chunkData, true);
@@ -241,7 +248,7 @@ public class CustomChunkGenerator extends ChunkGenerator {
 
 		//make sure the void is always closed off
 		chunkData.setRegion(0, 0, 0, 15 + 1, 8, 15 + 1, baseMaterial);
-
+		
 		//finally, return the generated chunkData*/
 		return chunkData;
 	}

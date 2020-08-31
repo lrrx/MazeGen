@@ -17,7 +17,6 @@ public class SpawnChunkGen extends ChunkGen{
 	
 	@Override
 	public ChunkData generate(ChunkData chunkData) {
-		Random random = createRandom(chunkX, chunkZ);
 		
 		if(Math.abs(chunkX) == spawnSize && Math.abs(chunkZ) == spawnSize) {
 			chunkData.setRegion(0, baseHeight, 0, 16, baseHeight + 16 * (spawnSize  * 2 + 1) + 1, 16, baseMaterial);

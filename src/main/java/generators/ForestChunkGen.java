@@ -33,13 +33,13 @@ public class ForestChunkGen extends ChunkGen{
 				int xOffset = -1 + 2 * x;
 				int zOffset = -1 + 2 * z;
 
-				if(!GeneratorChooser.isForest(chunkX + xOffset, chunkZ + zOffset, world)) {
+				if(!GeneratorChooser.isForest(world, chunkX + xOffset, chunkZ + zOffset)) {
 					isForest[x][z] = 0;
 				}
-				else if (!GeneratorChooser.isForest(chunkX + xOffset, chunkZ, world)) {
+				else if (!GeneratorChooser.isForest(world, chunkX + xOffset, chunkZ)) {
 					isForest[x][z] = 0;
 				}
-				else if(!GeneratorChooser.isForest(chunkX, chunkZ + zOffset, world)) {
+				else if(!GeneratorChooser.isForest(world, chunkX, chunkZ + zOffset)) {
 					isForest[x][z] = 0;
 				}
 			}
@@ -53,7 +53,7 @@ public class ForestChunkGen extends ChunkGen{
 		Random random = this.createRandom(chunkX, chunkZ);
 
 		//clear ground for landscape
-		chunkData.setRegion(0, baseHeight - 8, 0, 16, baseHeight + 1, 16, Material.AIR);
+		//chunkData.setRegion(0, baseHeight - 8, 0, 16, baseHeight + 1, 16, Material.AIR);
 
 		int isForest[][] = isForestEdge(chunkX, chunkZ, world);
 
@@ -303,11 +303,7 @@ public class ForestChunkGen extends ChunkGen{
 					int upperLeafEnd =  leavesMidPoint + (int)((leavesNoise + Math.abs(leavesNoiseBig) + random.nextInt(2)) * forestEdgeBilerpValue);
 					
 					for(int y = lowerLeafEnd; y < upperLeafEnd; y++) {
-						Block block = chunk.getBlock(x, y, z);
-						block.setType(Material.OAK_LEAVES, false);
-						Leaves leaf = (Leaves) block.getBlockData();
-				        leaf.setPersistent(true);
-				        block.setBlockData(leaf, false);
+						createPersistentLeaf(x, y, z, Material.OAK_LEAVES, chunk);
 					}
 
 					//create trunks

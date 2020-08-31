@@ -114,8 +114,12 @@ public class ChunkGen {
 		world.getBlockAt(chunk.getBlock(x, y, z).getLocation()).setType(material);
 	}
 	
-	protected void createPersistentLeaf(int x, int y, int z, Chunk chunk) {
-		
+	protected void createPersistentLeaf(int x, int y, int z, Material material, Chunk chunk) {
+		Block block = chunk.getBlock(x, y, z);
+		block.setType(material, false);
+		Leaves leaf = (Leaves) block.getBlockData();
+        leaf.setPersistent(true);
+        block.setBlockData(leaf, false);
 	}
 	
 	

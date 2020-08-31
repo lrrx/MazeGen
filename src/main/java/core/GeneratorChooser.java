@@ -9,26 +9,26 @@ public class GeneratorChooser {
 
 	private static int chunkCenterOffset = 7;
 	
-	public static boolean isForest(int chunkX, int chunkZ, World world) {
+	public static boolean isForest(World world, int chunkX, int chunkZ) {
 		
 		int forestsOffset = 16384;
 		
-		for(int i = 0; i < 4 ; i++) {
+		for(int i = 0; i < 3 ; i++) {
 			double chunkLargeNoise = NoiseGen.largeNoise(chunkCenterOffset + chunkX * 16 + i * forestsOffset, chunkCenterOffset +  chunkZ * 16 + i * forestsOffset, world);
 			
-			if(chunkLargeNoise < -0.75) {
+			if(chunkLargeNoise < -0.8) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public static boolean isPlainsChunk(int chunkX, int chunkZ, World world) {
+	public static boolean isPlainsChunk(World world, int chunkX, int chunkZ) {
 		
 		double chunkNoise = NoiseGen.noise(chunkCenterOffset + chunkX * 16, chunkCenterOffset + chunkZ * 16, world);
 		double chunkLargeNoise = NoiseGen.largeNoise(chunkCenterOffset + chunkX * 16, chunkCenterOffset + chunkZ * 16, world);
 		
-		if(chunkNoise > -0.6 && chunkLargeNoise > 0.5) {
+		if(chunkNoise > -0.7 && chunkLargeNoise > 0.5) {
 			return true;
 		}
 		else {
@@ -36,7 +36,7 @@ public class GeneratorChooser {
 		}
 	}
 
-	public static boolean isMazeChunk(int chunkX, int chunkZ, World world) {
+	public static boolean isMazeChunk(World world, int chunkX, int chunkZ) {
 		double chunkNoise = NoiseGen.noise(chunkCenterOffset + chunkX * 16, chunkCenterOffset + chunkZ * 16, world);
 		
 		if (0.4 < chunkNoise && chunkNoise <= 0.6) {
@@ -44,16 +44,27 @@ public class GeneratorChooser {
 		}
 		else if (-0.4 < chunkNoise && chunkNoise <= -0.2) {
 			return true;
-		}
+		} 
 		else {
 			return false;
 		}
 	}
+	
+	public static boolean isSpawnChunk(World world, int chunkX, int chunkZ) {
+		int spawnSize = ChunkGen.getSpawnSize();
+		
+		if(Math.abs(chunkX) <= spawnSize && Math.abs(chunkZ) <= spawnSize) {
+			return true;
+		}
+		else {
+			return false; 
+		}
+	}
 
-	public static boolean isForestNear(int chunkX, int chunkZ, World world) {
+	public static boolean isForestNear(World world, int chunkX, int chunkZ) {
 		for(int x = -1; x <= 1; x++) {
 			for(int z = -1; z <= 1; z++) {
-				if (isForest(chunkCenterOffset + chunkX, chunkCenterOffset + chunkZ, world)) {
+				if (isForest(world, chunkCenterOffset + chunkX, chunkCenterOffset + chunkZ)) {
 					if (debugEnabled) {
 						System.out.println("Forest is Near! chunkX: " + chunkX + " chunkZ: " + chunkZ + " x: " + x + " z: " + z);
 					}
@@ -79,29 +90,29 @@ public class GeneratorChooser {
 			cg = new EmptyChunkGen(world, chunkX, chunkZ);
 		}
 		//generate empty rooms near spawn
-		else if(Math.abs(chunkX) <= spawnSize && Math.abs(chunkZ) <= spawnSize) {
+		else if(isSpawnChunk(world, chunkX, chunkZ)) {
 			cg = new SpawnChunkGen(world, chunkX, chunkZ);
 		}
-		else if (isPlainsChunk(chunkX, chunkZ, world)) {
+		else if (isPlainsChunk(world, chunkX, chunkZ)) {
 			cg = new PlainsChunkGen(world, chunkX, chunkZ);
 		}
 		//use chunkNoise to decide what type of room (Maze/Forest) to generate
-		else if (isForest(chunkX, chunkZ, world)) {
+		else if (isForest(world, chunkX, chunkZ)) {
 			cg = new ForestChunkGen(world, chunkX, chunkZ);
 		}
-		else if(isMazeChunk(chunkX, chunkZ, world)) {
+		else if(isMazeChunk(world, chunkX, chunkZ)) {
 			cg = new MazeChunkGen(world, chunkX, chunkZ);
 		}
 		
 		//only generate LavaChunk if there is no forest close to it
 		else if(1 <= n && n <= 30) {
-			if (!isForestNear(chunkX, chunkZ, world)) {
+			if (!isForestNear(world, chunkX, chunkZ)) {
 				cg = new LavaChunkGen(world, chunkX, chunkZ);
 			}
 		}
 		//only generate LavaParkourChunk if there is no forest close to it
 		else if (101 <= n && n <= 130) {
-			if (!isForestNear(chunkX, chunkZ, world)) {
+			if (!isForestNear(world, chunkX, chunkZ)) {
 				cg = new LavaParkourChunkGen(world, chunkX, chunkZ);
 			}
 		}
@@ -148,7 +159,7 @@ public class GeneratorChooser {
 			cg = new FarmChunkGen(world, chunkX, chunkZ);
 		}
 		else {
-			cg = new EmptyChunkGen(world, chunkX, chunkZ);
+			//cg = new EmptyChunkGen(world, chunkX, chunkZ);
 		}
 		return cg;
 	}

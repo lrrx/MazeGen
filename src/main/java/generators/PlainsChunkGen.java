@@ -28,13 +28,13 @@ public class PlainsChunkGen extends ChunkGen{
 				int xOffset = -1 + 2 * x;
 				int zOffset = -1 + 2 * z;
 
-				if(!GeneratorChooser.isPlainsChunk(chunkX + xOffset, chunkZ + zOffset, world)) {
+				if(!GeneratorChooser.isPlainsChunk(world, chunkX + xOffset, chunkZ + zOffset)) {
 					isPlains[x][z] = 0;
 				}
-				else if (!GeneratorChooser.isPlainsChunk(chunkX + xOffset, chunkZ, world)) {
+				else if (!GeneratorChooser.isPlainsChunk(world, chunkX + xOffset, chunkZ)) {
 					isPlains[x][z] = 0;
 				}
-				else if(!GeneratorChooser.isPlainsChunk(chunkX, chunkZ + zOffset, world)) {
+				else if(!GeneratorChooser.isPlainsChunk(world, chunkX, chunkZ + zOffset)) {
 					isPlains[x][z] = 0;
 				}
 			}

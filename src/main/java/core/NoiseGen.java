@@ -16,8 +16,8 @@ public class NoiseGen {
 	//large-scale chunk location based perlin noise
 	public static double largeNoise(int chunkX, int chunkZ, World world) {
 		SimplexOctaveGenerator generator = new SimplexOctaveGenerator(new Random(world.getSeed()), 2);
-		generator.setScale(0.0008D / 16);
-		return generator.noise(chunkX * 16 , chunkZ * 16 , 0.4D, 0.1D, true);
+		generator.setScale(0.002D / 16);
+		return generator.noise(chunkX * 16 , chunkZ * 16 , 0.2D, 0.1D, true);
 	}
 
 }
