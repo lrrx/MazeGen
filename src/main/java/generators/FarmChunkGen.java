@@ -15,7 +15,7 @@ import core.ChunkType;
 
 public class FarmChunkGen extends ChunkGen{
 	public FarmChunkGen(World world, int chunkX, int chunkZ) {
-		super("Empty Room", ChunkType.NEUTRAL, false, 1, chunkX, chunkZ, world);
+		super("Farm Chunk", ChunkType.RESOURCES, false, 1, chunkX, chunkZ, world);
 	}
 
 	@Override

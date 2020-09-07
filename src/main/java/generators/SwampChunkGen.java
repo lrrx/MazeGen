@@ -14,7 +14,7 @@ import core.ChunkType;
 
 public class SwampChunkGen extends ChunkGen{
 	public SwampChunkGen(World world, int chunkX, int chunkZ) {
-		super("Empty Room", ChunkType.NEUTRAL, false, 1, chunkX, chunkZ, world);
+		super("Swamp Chunk", ChunkType.OBSTACLE, false, 1, chunkX, chunkZ, world);
 	}
 	
 	@Override

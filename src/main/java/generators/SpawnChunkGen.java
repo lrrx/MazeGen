@@ -12,7 +12,7 @@ import core.ChunkType;
 
 public class SpawnChunkGen extends ChunkGen{
 	public SpawnChunkGen(World world, int chunkX, int chunkZ) {
-		super("Empty Room", ChunkType.NEUTRAL, false, 1, chunkX, chunkZ, world);
+		super("Spawn Chunk", ChunkType.NEUTRAL, false, 1, chunkX, chunkZ, world);
 	}
 	
 	@Override
