@@ -2,12 +2,10 @@ package generators;
 
 import java.util.Random;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.type.Leaves;
 import org.bukkit.generator.ChunkGenerator.ChunkData;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
@@ -15,11 +13,10 @@ import org.bukkit.util.noise.SimplexOctaveGenerator;
 import core.ChunkGen;
 import core.ChunkType;
 import core.GeneratorChooser;
-import core.NoiseGen;
 
 public class ForestChunkGen extends ChunkGen{
-	public ForestChunkGen(World world, int chunkX, int chunkZ) {
-		super("Inner Forest", ChunkType.FOREST, false, 1, chunkX, chunkZ, world);
+	public ForestChunkGen(World world) {
+		super("Inner Forest", ChunkType.FOREST, false, 1, world);
 	}
 
 	private static int[][] isForestEdge(int chunkX, int chunkZ, World world) {
@@ -49,7 +46,7 @@ public class ForestChunkGen extends ChunkGen{
 	}
 
 	@Override
-	public ChunkData generate(ChunkData chunkData) {
+	public ChunkData generate(ChunkData chunkData, int chunkX, int chunkZ) {
 		Random random = this.createRandom(chunkX, chunkZ);
 
 		//clear ground for landscape
@@ -88,7 +85,7 @@ public class ForestChunkGen extends ChunkGen{
 			for(int z = 0; z <= 15; z++) {
 
 				//Calculate Noise values for each x-z Point
-				double largeNoise = NoiseGen.largeNoise(chunkX * 16 + x, chunkZ * 16 + z, world);
+				//double largeNoise = NoiseGen.largeNoise(chunkX * 16 + x, chunkZ * 16 + z, world);
 				int noise = (int) (generator.noise(chunkX * 16 + x, chunkZ * 16 + z, 0.2D, 0.4D) * 3);
 				int detailNoise = (int) (detailGenerator.noise(chunkX * 16 + x, chunkZ * 16 + z, 0.2D, 0.4D) * 3);
 				int leavesNoise = (int) (leavesGenerator.noise(chunkX * 16 + x, chunkZ * 16 + z, 0.5D, 0.2D) * 4);
@@ -241,7 +238,7 @@ public class ForestChunkGen extends ChunkGen{
 			for(int z = 0; z <= 15; z++) {
 				
 				//Calculate Noise values for each x-z Point
-				double largeNoise = NoiseGen.largeNoise(chunkX * 16 + x, chunkZ * 16 + z, world);
+				//double largeNoise = NoiseGen.largeNoise(chunkX * 16 + x, chunkZ * 16 + z, world);
 				int noise = (int) (generator.noise(chunkX * 16 + x, chunkZ * 16 + z, 0.2D, 0.4D) * 3);
 				int leavesNoise = (int) (leavesGenerator.noise(chunkX * 16 + x, chunkZ * 16 + z, 0.25D, 0.2D) * 4);
 				int leavesNoise2 = (int) (leavesGenerator.noise(chunkX * 16 + x + 4096, chunkZ * 16 + z + 4096, 0.3D, 0.25D) * 4);

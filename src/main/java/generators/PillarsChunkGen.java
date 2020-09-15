@@ -9,12 +9,12 @@ import core.ChunkGen;
 import core.ChunkType;
 
 public class PillarsChunkGen extends ChunkGen{
-	public PillarsChunkGen(World world, int chunkX, int chunkZ) {
-		super("Pillar Room", ChunkType.NEUTRAL, false, 1, chunkX, chunkZ, world);
+	public PillarsChunkGen(World world) {
+		super("Pillar Room", ChunkType.NEUTRAL, false, 1, world);
 	}
 
 	@Override
-	public ChunkData generate(ChunkData chunkData) {
+	public ChunkData generate(ChunkData chunkData, int chunkX, int chunkZ) {
 		Random random = this.createRandom(chunkX, chunkZ);
 		for(int i = 0; i <= random.nextInt(10) + 15; i++){
 			int platformX = 2 + random.nextInt(13);

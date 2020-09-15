@@ -10,12 +10,12 @@ import core.ChunkGen;
 import core.ChunkType;
 
 public class MeadowChunkGen extends ChunkGen{
-	public MeadowChunkGen(World world, int chunkX, int chunkZ) {
-		super("Meadow", ChunkType.GARDEN, false, 1, chunkX, chunkZ, world);
+	public MeadowChunkGen(World world) {
+		super("Meadow", ChunkType.GARDEN, false, 1, world);
 	}
 	
 	@Override
-	public ChunkData generate(ChunkData chunkData) {
+	public ChunkData generate(ChunkData chunkData, int chunkX, int chunkZ) {
 		Random random = this.createRandom(chunkX, chunkZ);
 
 		chunkData.setRegion(1, baseHeight, 1, 15 + 1, baseHeight + 1, 15 + 1, Material.GRASS_BLOCK);

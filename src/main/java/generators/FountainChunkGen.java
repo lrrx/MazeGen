@@ -12,12 +12,12 @@ import core.ChunkGen;
 import core.ChunkType;
 
 public class FountainChunkGen extends ChunkGen{
-	public FountainChunkGen(World world, int chunkX, int chunkZ) {
-		super("Fountain Room", ChunkType.GARDEN, false, 1, chunkX, chunkZ, world);
+	public FountainChunkGen(World world) {
+		super("Fountain Room", ChunkType.GARDEN, false, 1, world);
 	}
 	
 	@Override
-	public ChunkData generate(ChunkData chunkData) {
+	public ChunkData generate(ChunkData chunkData, int chunkX, int chunkZ) {
 		chunkData.setRegion(1, baseHeight - 4, 1, 15 + 1, baseHeight, 15 + 1, Material.DIRT);
 		chunkData.setRegion(1, baseHeight, 1, 15 + 1, baseHeight + 1, 15 + 1, Material.GRASS_BLOCK);
 		chunkData.setRegion(1, baseHeight, 8, 15 + 1, baseHeight + 1, 8 + 1, Material.GRASS_PATH);

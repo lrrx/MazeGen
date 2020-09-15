@@ -10,12 +10,12 @@ import core.ChunkGen;
 import core.ChunkType;
 
 public class WaterChunkGen extends ChunkGen{
-	public WaterChunkGen(World world, int chunkX, int chunkZ) {
-		super("Water Chunk", ChunkType.OBSTACLE, false, 1, chunkX, chunkZ, world);
+	public WaterChunkGen(World world) {
+		super("Water Chunk", ChunkType.OBSTACLE, false, 1, world);
 	}
 
 	@Override
-	public ChunkData generate(ChunkData chunkData) {
+	public ChunkData generate(ChunkData chunkData, int chunkX, int chunkZ) {
 		Random random = this.createRandom(chunkX, chunkZ);
 		chunkData.setRegion(1, baseHeight, 1, 16, baseHeight + 1, 16, Material.AIR);
 		chunkData.setRegion(1, baseHeight - 8, 1, 16, baseHeight - 7, 16, Material.SAND);

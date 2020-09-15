@@ -10,12 +10,12 @@ import core.ChunkGen;
 import core.ChunkType;
 
 public class LavaHolesChunkGen extends ChunkGen{
-	public LavaHolesChunkGen(World world, int chunkX, int chunkZ) {
-		super("Lava Holes", ChunkType.OBSTACLE, false, 1, chunkX, chunkZ, world);
+	public LavaHolesChunkGen(World world) {
+		super("Lava Holes", ChunkType.OBSTACLE, false, 1, world);
 	}
 
 	@Override
-	public ChunkData generate(ChunkData chunkData) {
+	public ChunkData generate(ChunkData chunkData, int chunkX, int chunkZ) {
 		Random random = this.createRandom(chunkX, chunkZ);
 
 		chunkData.setRegion(1, baseHeight, 1, 15 + 1, baseHeight + 1, 15 + 1, Material.AIR);

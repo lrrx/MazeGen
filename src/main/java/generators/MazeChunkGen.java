@@ -12,12 +12,12 @@ import core.MazeChunkGenerator;
 import core.NoiseGen;
 
 public class MazeChunkGen extends ChunkGen{
-	public MazeChunkGen(World world, int chunkX, int chunkZ) {
-		super("Maze", ChunkType.PUZZLE, false, 1, chunkX, chunkZ, world);
+	public MazeChunkGen(World world) {
+		super("Maze", ChunkType.PUZZLE, false, 1, world);
 	}
 
 	@Override
-	public ChunkData generate(ChunkData chunkData) {
+	public ChunkData generate(ChunkData chunkData, int chunkX, int chunkZ) {
 		Random random = this.createRandom(chunkX, chunkZ);
 		int[][] maze = MazeChunkGenerator.generateMaze(NoiseGen.noise(chunkX, chunkZ, world));
 		//int wH = 16 + ((int) Math.abs(NoiseGen.largeNoise(chunkX, chunkZ, world) * 8D));

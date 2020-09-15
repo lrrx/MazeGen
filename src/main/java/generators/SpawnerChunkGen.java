@@ -63,12 +63,12 @@ public class SpawnerChunkGen extends ChunkGen{
 			EntityType.ZOMBIE,
 			EntityType.ZOMBIE_VILLAGER));
 	
-	public SpawnerChunkGen(World world, int chunkX, int chunkZ) {
-		super("Spawner Room", ChunkType.DUNGEON, false, 1, chunkX, chunkZ, world);
+	public SpawnerChunkGen(World world) {
+		super("Spawner Room", ChunkType.DUNGEON, false, 1, world);
 	}
 
 	@Override
-	public ChunkData generate(ChunkData chunkData) {
+	public ChunkData generate(ChunkData chunkData, int chunkX, int chunkZ) {
 		Random random = createRandom(chunkX, chunkZ);
 		
 		int spawnerX = random.nextInt(8) + 4;

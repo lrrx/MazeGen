@@ -12,18 +12,18 @@ import org.bukkit.generator.ChunkGenerator.ChunkData;
 
 public class ChunkGen {
 	protected Material[] flowerTypes = {
-			Material.ALLIUM,
-			Material.AZURE_BLUET,
-			Material.BLUE_ORCHID,
-			Material.CORNFLOWER,
-			Material.DANDELION,
-			Material.LILAC,
-			Material.LILY_OF_THE_VALLEY,
-			Material.ORANGE_TULIP,
-			Material.OXEYE_DAISY,
-			Material.PEONY,
-			Material.PINK_TULIP,
-			Material.POPPY
+		Material.ALLIUM,
+		Material.AZURE_BLUET,
+		Material.BLUE_ORCHID,
+		Material.CORNFLOWER,
+		Material.DANDELION,
+		Material.LILAC,
+		Material.LILY_OF_THE_VALLEY,
+		Material.ORANGE_TULIP,
+		Material.OXEYE_DAISY,
+		Material.PEONY,
+		Material.PINK_TULIP,
+		Material.POPPY
 	};
 	
 	private String name;
@@ -77,14 +77,12 @@ public class ChunkGen {
 		return biome;
 	}
 	
-	public ChunkGen(String name, ChunkType type, boolean isMultiChunk, int size, int chunkX, int chunkZ, World world) {
+	public ChunkGen(String name, ChunkType type, boolean isMultiChunk, int size, World world) {
 		this.name = name;
 		this.type = type;
 		this.isMultiChunk = isMultiChunk;
 		this.size = size;
 		
-		this.chunkX = chunkX;
-		this.chunkZ = chunkZ;
 		this.world = world;
 	}
 	
@@ -123,7 +121,7 @@ public class ChunkGen {
 	}
 	
 	
-	public ChunkData generate(ChunkData chunkData) {
+	public ChunkData generate(ChunkData chunkData, int chunkX, int chunkZ) {
 		return chunkData;
 	}
 

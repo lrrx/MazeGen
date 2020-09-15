@@ -10,12 +10,12 @@ import core.ChunkGen;
 import core.ChunkType;
 
 public class StoneMineChunkGen extends ChunkGen{
-	public StoneMineChunkGen(World world, int chunkX, int chunkZ) {
-		super("Stone Mine", ChunkType.RESOURCES, false, 1, chunkX, chunkZ, world);
+	public StoneMineChunkGen(World world) {
+		super("Stone Mine", ChunkType.RESOURCES, false, 1, world);
 	}
 
 	@Override
-	public ChunkData generate(ChunkData chunkData) {
+	public ChunkData generate(ChunkData chunkData, int chunkX, int chunkZ) {
 		Random random = this.createRandom(chunkX, chunkZ);
 		//generate Underground Stone
 		

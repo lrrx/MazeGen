@@ -13,8 +13,8 @@ import core.GeneratorChooser;
 import core.NoiseGen;
 
 public class PlainsChunkGen extends ChunkGen{
-	public PlainsChunkGen(World world, int chunkX, int chunkZ) {
-		super("Plains", ChunkType.NEUTRAL, false, 1, chunkX, chunkZ, world);
+	public PlainsChunkGen(World world) {
+		super("Plains", ChunkType.NEUTRAL, false, 1, world);
 	}
 
 	private static int[][] isPlainsEdge(int chunkX, int chunkZ, World world) {
@@ -48,7 +48,7 @@ public class PlainsChunkGen extends ChunkGen{
 	}
 
 	@Override
-	public ChunkData generate(ChunkData chunkData) {
+	public ChunkData generate(ChunkData chunkData, int chunkX, int chunkZ) {
 		Random random = this.createRandom(chunkX, chunkZ);
 
 		int isPlains[][] = isPlainsEdge(chunkX, chunkZ, world);

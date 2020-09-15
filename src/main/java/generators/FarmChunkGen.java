@@ -14,12 +14,12 @@ import core.ChunkGen;
 import core.ChunkType;
 
 public class FarmChunkGen extends ChunkGen{
-	public FarmChunkGen(World world, int chunkX, int chunkZ) {
-		super("Farm Chunk", ChunkType.RESOURCES, false, 1, chunkX, chunkZ, world);
+	public FarmChunkGen(World world) {
+		super("Farm Chunk", ChunkType.RESOURCES, false, 1, world);
 	}
 
 	@Override
-	public ChunkData generate(ChunkData chunkData) {
+	public ChunkData generate(ChunkData chunkData, int chunkX, int chunkZ) {
 		Random random = createRandom(chunkX, chunkZ);
 
 		Map<Material, Double> cropMaterialMap = new HashMap<Material, Double>();

@@ -9,12 +9,12 @@ import core.ChunkGen;
 import core.ChunkType;
 
 public class LargeTowerChunkGen extends ChunkGen{
-	public LargeTowerChunkGen(World world, int chunkX, int chunkZ) {
-		super("Large Tower", ChunkType.NEUTRAL, false, 1, chunkX, chunkZ, world);
+	public LargeTowerChunkGen(World world) {
+		super("Large Tower", ChunkType.NEUTRAL, false, 1, world);
 	}
 	
 	@Override
-	public ChunkData generate(ChunkData chunkData) {
+	public ChunkData generate(ChunkData chunkData, int chunkX, int chunkZ) {
 		Random random = this.createRandom(chunkX, chunkZ);
 		
 		int width = random.nextInt(6);

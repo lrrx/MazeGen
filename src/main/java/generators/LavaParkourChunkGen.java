@@ -10,13 +10,13 @@ import core.ChunkGen;
 import core.ChunkType;
 
 public class LavaParkourChunkGen extends ChunkGen{
-	public LavaParkourChunkGen(World world, int chunkX, int chunkZ) {
-		super("Lava Parkour", ChunkType.PARKOUR, false, 1, chunkX, chunkZ, world);
+	public LavaParkourChunkGen(World world) {
+		super("Lava Parkour", ChunkType.PARKOUR, false, 1, world);
 	}
 	
 	
 	@Override
-	public ChunkData generate(ChunkData chunkData) {
+	public ChunkData generate(ChunkData chunkData, int chunkX, int chunkZ) {
 		Random random = this.createRandom(chunkX, chunkZ);
 		chunkData.setRegion(1, baseHeight, 1, 15 + 1, baseHeight + 1, 15 + 1, Material.AIR);
 		chunkData.setRegion(1, baseHeight - 8, 1, 15 + 1, baseHeight, 15 + 1, Material.LAVA);

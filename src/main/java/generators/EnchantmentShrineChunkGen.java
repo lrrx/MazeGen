@@ -10,12 +10,12 @@ import core.ChunkGen;
 import core.ChunkType;
 
 public class EnchantmentShrineChunkGen extends ChunkGen{
-	public EnchantmentShrineChunkGen(World world, int chunkX, int chunkZ) {
-		super("Enchantment Shrine", ChunkType.SHRINE, false, 1, chunkX, chunkZ, world);
+	public EnchantmentShrineChunkGen(World world) {
+		super("Enchantment Shrine", ChunkType.SHRINE, false, 1, world);
 	}
 	
 	@Override
-	public ChunkData generate(ChunkData chunkData) {
+	public ChunkData generate(ChunkData chunkData, int chunkX, int chunkZ) {
 		Random random = this.createRandom(chunkX, chunkZ);
 		for(int i = 0; i <= random.nextInt(5) + 15; i++){
 			int platformX = 1 + random.nextInt(14);

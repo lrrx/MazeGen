@@ -208,7 +208,7 @@ public class CustomChunkGenerator extends ChunkGenerator {
 		boolean doGroundPregeneration = !(GeneratorChooser.isForest(world, chunkX, chunkZ) || GeneratorChooser.isPlainsChunk(world, chunkX, chunkZ));
 
 		if (!(GeneratorChooser.isSpawnChunk(world, chunkX, chunkZ))) {
-			doGroundPregeneration = true;
+			//doGroundPregeneration = true;
 		}
 
 		boolean doWallPostgeneration = !(GeneratorChooser.isForest(world, chunkX, chunkZ)
@@ -230,7 +230,7 @@ public class CustomChunkGenerator extends ChunkGenerator {
 		ChunkGen cg = GeneratorChooser.getChunkGen(chunkX, chunkZ, highwaysEnabled, spawnSize, world);
 
 		//let cg generate into chunkData
-		chunkData = cg.generate(chunkData);
+		chunkData = cg.generate(chunkData, chunkX, chunkZ);
 
 		if (debugEnabled) {
 			System.out.println("Nanos: " + (System.nanoTime() - startNanos) + "\t Type: " + cg.getName());

@@ -1,5 +1,8 @@
 package core;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.World;
 
 import generators.*;
@@ -8,6 +11,9 @@ public class GeneratorChooser {
 	static boolean debugEnabled = false;
 
 	private static int chunkCenterOffset = 7;
+	
+	private static Map<ChunkGen, Double> ChunkGenChanceMap = new HashMap<ChunkGen, Double>();
+	
 	
 	public static boolean isForest(World world, int chunkX, int chunkZ) {
 		
@@ -79,7 +85,7 @@ public class GeneratorChooser {
 		
 		double chunkNoise = NoiseGen.noise(chunkX * 16, chunkZ * 16, world);
 		
-		ChunkGen cg = new EmptyChunkGen(world, chunkX, chunkZ);
+		ChunkGen cg = new EmptyChunkGen(world);
 		//generate random integer for room generation choice
 		int n = Math.abs(((int) (chunkNoise * 2147483647D)) % 1600);
 
@@ -87,79 +93,79 @@ public class GeneratorChooser {
 
 		//generate empty rooms for highways
 		if((chunkX % 256 == 0 || chunkZ % 256 == 0) && highwaysEnabled) {
-			cg = new EmptyChunkGen(world, chunkX, chunkZ);
+			cg = new EmptyChunkGen(world);
 		}
 		//generate empty rooms near spawn
 		else if(isSpawnChunk(world, chunkX, chunkZ)) {
-			cg = new SpawnChunkGen(world, chunkX, chunkZ);
+			cg = new SpawnChunkGen(world);
 		}
 		else if (isPlainsChunk(world, chunkX, chunkZ)) {
-			cg = new PlainsChunkGen(world, chunkX, chunkZ);
+			cg = new PlainsChunkGen(world);
 		}
 		//use chunkNoise to decide what type of room (Maze/Forest) to generate
 		else if (isForest(world, chunkX, chunkZ)) {
-			cg = new ForestChunkGen(world, chunkX, chunkZ);
+			cg = new ForestChunkGen(world);
 		}
 		else if(isMazeChunk(world, chunkX, chunkZ)) {
-			cg = new MazeChunkGen(world, chunkX, chunkZ);
+			cg = new MazeChunkGen(world);
 		}
 		
 		//only generate LavaChunk if there is no forest close to it
 		else if(1 <= n && n <= 30) {
 			if (!isForestNear(world, chunkX, chunkZ)) {
-				cg = new LavaChunkGen(world, chunkX, chunkZ);
+				cg = new LavaChunkGen(world);
 			}
 		}
 		//only generate LavaParkourChunk if there is no forest close to it
 		else if (101 <= n && n <= 130) {
 			if (!isForestNear(world, chunkX, chunkZ)) {
-				cg = new LavaParkourChunkGen(world, chunkX, chunkZ);
+				cg = new LavaParkourChunkGen(world);
 			}
 		}
 		else if (201 <= n && n <= 220) {
-			cg = new StoneMineChunkGen(world, chunkX, chunkZ);
+			cg = new StoneMineChunkGen(world);
 		}
 		else if (301 <= n && n <= 350) {
-			cg = new PillarsChunkGen(world, chunkX, chunkZ);
+			cg = new PillarsChunkGen(world);
 		}
 		else if (401 <= n && n <= 410) {
-			cg = new EnchantmentShrineChunkGen(world, chunkX, chunkZ);
+			cg = new EnchantmentShrineChunkGen(world);
 		}
 		else if (501 <= n && n <= 530) {
-			cg = new FountainChunkGen(world, chunkX, chunkZ);
+			cg = new FountainChunkGen(world);
 		}
 		else if(601 <= n && n <= 630) {
-			cg = new SpawnerChunkGen(world, chunkX, chunkZ);
+			cg = new SpawnerChunkGen(world);
 		}
 		else if (701 <= n && n <= 730) {
-			cg = new LootChunkGen(world, chunkX, chunkZ);
+			cg = new LootChunkGen(world);
 		}
 		else if (801 <= n && n <= 815) {
-			cg = new LargeTowerChunkGen(world, chunkX, chunkZ);
+			cg = new LargeTowerChunkGen(world);
 		}
 		else if (901 <= n && n <= 930) {
-			cg = new WaterChunkGen(world, chunkX, chunkZ);
+			cg = new WaterChunkGen(world);
 		}
 		else if (1001 <= n && n <= 1010) {
-			cg = new WaterHolesChunkGen(world, chunkX, chunkZ);
+			cg = new WaterHolesChunkGen(world);
 		}
 		else if (1101 <= n && n <= 1130) {
-			cg = new LavaHolesChunkGen(world, chunkX, chunkZ);
+			cg = new LavaHolesChunkGen(world);
 		}
 		else if (1201 <= n && n <= 1230) {
-			cg = new MeadowChunkGen(world, chunkX, chunkZ);
+			cg = new MeadowChunkGen(world);
 		}
 		else if (1301 <= n && n <= 1330) {
-			cg = new DesertChunkGen(world, chunkX, chunkZ);
+			cg = new DesertChunkGen(world);
 		}
 		else if (1401 <= n && n <= 1430) {
-			cg = new SwampChunkGen(world, chunkX, chunkZ);
+			cg = new SwampChunkGen(world);
 		}
 		else if (1501 <= n && n <= 1530) {
-			cg = new FarmChunkGen(world, chunkX, chunkZ);
+			cg = new FarmChunkGen(world);
 		}
 		else {
-			//cg = new EmptyChunkGen(world, chunkX, chunkZ);
+			//cg = new EmptyChunkGen(world);
 		}
 		return cg;
 	}

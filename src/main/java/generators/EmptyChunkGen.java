@@ -11,12 +11,12 @@ import core.ChunkGen;
 import core.ChunkType;
 
 public class EmptyChunkGen extends ChunkGen{
-	public EmptyChunkGen(World world, int chunkX, int chunkZ) {
-		super("Empty Room", ChunkType.NEUTRAL, false, 1, chunkX, chunkZ, world);
+	public EmptyChunkGen(World world) {
+		super("Empty Room", ChunkType.NEUTRAL, false, 1, world);
 	}
 	
 	@Override
-	public ChunkData generate(ChunkData chunkData) {
+	public ChunkData generate(ChunkData chunkData, int chunkX, int chunkZ) {
 		Random random = createRandom(chunkX, chunkZ);
 		for(int i = 0; i <= 5 + random.nextInt(10); i++) {
 			chunkData.setBlock(1 + random.nextInt(15), baseHeight, 1 + random.nextInt(15), Material.OBSIDIAN);

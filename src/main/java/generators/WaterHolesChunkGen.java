@@ -10,12 +10,12 @@ import core.ChunkGen;
 import core.ChunkType;
 
 public class WaterHolesChunkGen extends ChunkGen{
-	public WaterHolesChunkGen(World world, int chunkX, int chunkZ) {
-		super("Water Holes", ChunkType.OBSTACLE, false, 1, chunkX, chunkZ, world);
+	public WaterHolesChunkGen(World world) {
+		super("Water Holes", ChunkType.OBSTACLE, false, 1, world);
 	}
 
 	@Override
-	public ChunkData generate(ChunkData chunkData) {
+	public ChunkData generate(ChunkData chunkData, int chunkX, int chunkZ) {
 		Random random = this.createRandom(chunkX, chunkZ);
 
 		for(int i = 0; i <= random.nextInt(10) + 15; i++){

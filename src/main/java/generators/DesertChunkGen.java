@@ -11,12 +11,12 @@ import core.ChunkGen;
 import core.ChunkType;
 
 public class DesertChunkGen extends ChunkGen{
-	public DesertChunkGen(World world, int chunkX, int chunkZ) {
-		super("Desert", ChunkType.OBSTACLE, false, 1, chunkX, chunkZ, world);
+	public DesertChunkGen(World world) {
+		super("Desert", ChunkType.OBSTACLE, false, 1, world);
 	}
 
 	@Override
-	public ChunkData generate(ChunkData chunkData) {
+	public ChunkData generate(ChunkData chunkData, int chunkX, int chunkZ) {
 		
 		Random random = createRandom(chunkX, chunkZ);
 		chunkData.setRegion(1, baseHeight - 4, 1, 16, baseHeight + 1, 16, Material.SAND);

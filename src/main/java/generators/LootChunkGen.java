@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Random;
 
 import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -18,12 +17,12 @@ import core.ChunkGen;
 import core.ChunkType;
 
 public class LootChunkGen extends ChunkGen{
-	public LootChunkGen(World world, int chunkX, int chunkZ) {
-		super("Loot", ChunkType.LOOT, false, 1, chunkX, chunkZ, world);
+	public LootChunkGen(World world) {
+		super("Loot", ChunkType.LOOT, false, 1, world);
 	}
 
 	@Override
-	public ChunkData generate(ChunkData chunkData) {
+	public ChunkData generate(ChunkData chunkData, int chunkX, int chunkZ) {
 		Random random = this.createRandom(chunkX, chunkZ);
 		
 		int posX = 4 - random.nextInt(8);
